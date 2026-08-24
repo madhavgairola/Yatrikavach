@@ -165,16 +165,31 @@ function toggleSwitch(el) {
       'DID0807': { digitalId: 'DID0807', full_name: 'Renesha Sagar', phone: '+34 600123456', nationality: '🇪🇸 Spain', role: 'tourist', dob: '08 Jul 1999', blood: 'O-', lang: 'ES · EN', visa: 'Visa on Arrival', validTill: '01 Nov 2026', entry: '01 Sep 2026', city: 'Goa', stay: 'Taj Exotica', ins: 'Active ✓' },
       'DID6767': { digitalId: 'DID6767', full_name: 'Anupam Anand', phone: '+234 8012345678', nationality: '🇳🇬 Nigeria', role: 'tourist', dob: '22 Jan 1995', blood: 'A+', lang: 'EN · YR', visa: 'Tourist (Regular)', validTill: '15 Jan 2027', entry: '15 Oct 2026', city: 'Mumbai', stay: 'Oberoi', ins: 'Active ✓' },
       'DID9999': { digitalId: 'DID9999', full_name: 'Sarah Chen', phone: '+65 91234567', nationality: '🇸🇬 Singapore', role: 'tourist', dob: '30 May 1990', blood: 'AB+', lang: 'EN · ZH', visa: 'Business', validTill: '05 May 2028', entry: '05 May 2026', city: 'Bangalore', stay: 'Leela Palace', ins: 'Active ✓' },
-      'DID1111': { digitalId: 'DID1111', full_name: 'Admin Test', phone: '+1 555000000', nationality: '🇺🇸 USA', role: 'admin' }
+      'DID1111': { digitalId: 'DID1111', full_name: 'Admin Test', phone: '+1 555000000', nationality: '🇺🇸 USA', role: 'admin', dob: '10 Oct 1985', blood: 'O+', lang: 'EN · ES', visa: 'Work (H1-B)', validTill: '20 Aug 2028', entry: '20 Aug 2025', city: 'New York', stay: 'Local Residence', ins: 'Active ✓' }
     };
     let updated = false;
     for (const [did, data] of Object.entries(defaultUsers)) {
-      if (!users[did]) { users[did] = data; updated = true; }
+      if (!users[did]) { 
+        users[did] = data; 
+        updated = true; 
+      } else {
+        // Merge to update old hardcoded mock data while preserving passwords
+        users[did] = { ...users[did], ...data };
+        updated = true;
+      }
     }
     if (updated) localStorage.setItem('users', JSON.stringify(users));
 
     const s = localStorage.getItem('session'); 
-    if (s) { session = JSON.parse(s); await loadUser(); } 
+    if (s) { 
+      session = JSON.parse(s); 
+      // Update session with latest mock data if available
+      if (users[session.digitalId]) {
+        session = { ...session, ...users[session.digitalId] };
+        localStorage.setItem('session', JSON.stringify(session));
+      }
+      await loadUser(); 
+    } 
   }
   
   function txt(id, v) { const e = document.getElementById(id); if (e) e.textContent = v ?? '—'; }
@@ -214,7 +229,8 @@ function toggleSwitch(el) {
     const password = document.getElementById('li-password')?.value || '';
     if (!did || !password) return toast('Enter your Digital ID and password');
     const users = JSON.parse(localStorage.getItem('users') || '{}');
-    if (!users[did] || users[did].password !== password) return toast('Invalid credentials');
+    if (!users[did]) return toast('Digital ID not found');
+    if (users[did].password !== password) return toast('Wrong password');
     session = users[did];
     localStorage.setItem('session', JSON.stringify(session));
     toast('Signed in successfully');
