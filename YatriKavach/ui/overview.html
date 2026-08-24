@@ -1,0 +1,870 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>YatriKavach · Full App Overview Board</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/urbanist@5/index.css"><style>
+:root{
+  --bg:#FAFAF9;
+  --yellow:#FCFD76; --yellow-tint:#FBFCCB; --yellow-lite:#FBFCE0;
+  --lavender:#D7D7F4; --lavender-tint:#EDEDFA;
+  --sage:#C3D6D6; --sage-tint:#E4EDED; --sage-deep:#9FBCBC;
+  --cream:#F5F0DC; --cream-tint:#FAF7EC;
+  --coral:#FF6B6B; --coral-tint:#FFE5E5;
+  --ink:#212121; --muted:#8A8A8A; --white:#FDFEFF;
+  --font:'Urbanist','Urbanist Variable','Century Gothic','Poppins',ui-rounded,'Avenir Next','Segoe UI',system-ui,-apple-system,sans-serif;
+  --shadow:0 14px 30px -16px rgba(90,85,75,.35);
+  --shadow-sm:0 6px 16px -10px rgba(90,85,75,.42);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+body{font-family:var(--font);background:#ECEAE4;color:var(--ink);min-height:100vh;display:grid;place-items:center;padding:34px 16px;}
+.stage{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.hint{font-size:12.5px;color:#9a968d;font-weight:600;}
+
+.phone{width:392px;height:848px;background:#0c0c0c;border-radius:58px;padding:11px;box-shadow:0 46px 90px -34px rgba(60,55,45,.65);position:relative;}
+.notch{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:112px;height:30px;background:#0c0c0c;border-radius:20px;z-index:60;pointer-events:none;}
+.screen{width:100%;height:100%;background:var(--bg);border-radius:47px;overflow:hidden;position:relative;}
+
+.statusbar{height:52px;display:flex;align-items:center;justify-content:space-between;padding:16px 30px 0;position:relative;z-index:5;}
+.statusbar .t{font-weight:700;font-size:15px;}
+.statusbar .r{display:flex;gap:7px;align-items:center;}
+.sb-dark .t,.sb-dark svg *{fill:#212121;stroke:#212121;}
+
+.ib{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;cursor:pointer;transition:transform .12s;}
+.ib:active{transform:scale(.92);}
+.ib-white{background:var(--white);box-shadow:var(--shadow-sm);}
+.ib-yellow{background:var(--yellow);}
+.ib-sage{background:var(--sage-tint);}
+.ib-arrow{width:40px;height:40px;background:var(--ink);border-radius:50%;display:grid;place-items:center;flex-shrink:0;cursor:pointer;transition:transform .12s;}
+.ib-arrow:active{transform:scale(.9);}
+
+/* ---- app containers ---- */
+.app{position:absolute;inset:0;display:none;}
+.app.on{display:block;}
+.page,.apage{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;display:none;padding-bottom:120px;animation:fade .25s ease;}
+.page.active,.apage.active{display:block;}
+.page::-webkit-scrollbar,.apage::-webkit-scrollbar,.h-scroll::-webkit-scrollbar,.chips::-webkit-scrollbar{width:0;height:0;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:4px 22px 0;}
+.wordmark{display:flex;align-items:center;gap:8px;font-weight:700;font-size:20px;letter-spacing:-.3px;}
+.page-title{font-size:26px;font-weight:700;letter-spacing:-.6px;}
+.sos-btn{width:52px;height:52px;position:relative;background:var(--coral);box-shadow:0 10px 20px -8px rgba(255,107,107,.85);}
+.sos-btn::after{content:"";position:absolute;top:-1px;right:-1px;width:13px;height:13px;border-radius:50%;background:var(--coral);border:2.5px solid var(--bg);animation:pdot 2s infinite;}
+@keyframes pdot{0%{box-shadow:0 0 0 0 rgba(255,107,107,.55);}70%{box-shadow:0 0 0 9px rgba(255,107,107,0);}100%{box-shadow:0 0 0 0 rgba(255,107,107,0);}}
+
+.greet{padding:16px 26px 4px;}
+.avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#F3C6A5,#E79B78);display:grid;place-items:center;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--sage);font-weight:700;color:#fff;font-size:21px;cursor:pointer;}
+.greet h1{font-size:40px;font-weight:600;letter-spacing:-1.2px;line-height:1.02;margin-top:14px;font-style:italic;}
+.greet .loc{color:var(--muted);font-size:14.5px;font-weight:500;margin-top:8px;display:flex;align-items:center;gap:5px;}
+
+.score-pill{margin:18px 22px 0;background:var(--sage);border-radius:36px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow);}
+.donut{position:relative;width:78px;height:78px;flex-shrink:0;}
+.donut .ic{position:absolute;inset:0;display:grid;place-items:center;}
+.score-pill .mid{flex:1;text-align:center;}
+.score-pill .mid .big{font-size:33px;font-weight:800;letter-spacing:-1px;line-height:1;}
+.score-pill .mid .big sup{font-size:15px;font-weight:600;color:#5f6f6f;}
+.score-pill .mid p{font-size:14px;color:#5f6f6f;font-weight:500;margin-top:4px;}
+
+.chips{display:flex;gap:11px;padding:20px 22px 4px;overflow-x:auto;}
+.chip{background:var(--white);border-radius:999px;padding:12px 22px;font-size:15px;font-weight:600;white-space:nowrap;box-shadow:var(--shadow-sm);cursor:pointer;color:var(--ink);transition:transform .12s;}
+.chip:active{transform:scale(.95);}
+.chip.on{background:var(--yellow);box-shadow:none;}
+
+.section-h{display:flex;align-items:center;gap:14px;padding:24px 26px 12px;}
+.section-h h2{font-size:23px;font-weight:700;letter-spacing:-.4px;}
+.section-h .line{flex:1;height:1px;background:#E6E3DA;}
+
+.h-scroll{display:flex;gap:14px;padding:6px 22px 4px;overflow-x:auto;}
+.pcard{position:relative;width:172px;height:212px;border-radius:28px;flex-shrink:0;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer;}
+.pcard .art{position:absolute;inset:0;}
+.pcard .scrim{position:absolute;left:0;right:0;bottom:0;height:62%;background:linear-gradient(to top,rgba(22,20,16,.8),rgba(22,20,16,.15) 65%,transparent);}
+.pcard .status{position:absolute;top:13px;left:13px;background:var(--white);border-radius:999px;padding:6px 12px;font-size:11.5px;font-weight:700;display:flex;align-items:center;gap:6px;}
+.pcard .status i{width:7px;height:7px;border-radius:50%;}
+.pcard .txt{position:relative;padding:16px;color:#fff;z-index:2;}
+.pcard .txt h4{font-size:16px;font-weight:700;line-height:1.15;}
+.pcard .txt p{font-size:11.5px;opacity:.9;margin-top:3px;font-weight:500;display:flex;align-items:center;gap:4px;}
+.pcard .go{position:absolute;bottom:14px;right:14px;z-index:3;}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:6px 22px 0;}
+.stat{border-radius:30px;padding:18px;box-shadow:var(--shadow);min-height:134px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;transition:transform .12s;}
+.stat:active{transform:scale(.97);}
+.stat .row{display:flex;align-items:flex-start;justify-content:space-between;}
+.stat .ico{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.5);border:1.5px solid rgba(33,33,33,.16);display:grid;place-items:center;}
+.stat h4{font-size:17px;font-weight:700;line-height:1.1;}
+.stat p{font-size:12.5px;color:#59564e;font-weight:500;margin-top:4px;line-height:1.35;}
+.bg-y{background:var(--yellow);} .bg-l{background:var(--lavender);} .bg-s{background:var(--sage);} .bg-c{background:var(--cream);}
+
+.chart-card{margin:16px 22px 0;background:var(--sage);border-radius:34px;padding:20px;box-shadow:var(--shadow);}
+.chart-card .top{display:flex;align-items:flex-start;justify-content:space-between;}
+.chart-card .top .ttl{display:flex;align-items:center;gap:10px;}
+.chart-card .top .pie{width:36px;height:36px;border-radius:50%;border:1.6px solid rgba(33,33,33,.28);display:grid;place-items:center;}
+.chart-card h3{font-size:19px;font-weight:700;}
+.legend{display:flex;gap:16px;margin-top:16px;}
+.legend span{display:flex;align-items:center;gap:7px;font-size:12.5px;color:#4f5c5c;font-weight:600;}
+.legend i{width:10px;height:10px;border-radius:3px;}
+.hatch{background:repeating-linear-gradient(45deg,#8fa8a8,#8fa8a8 1.5px,transparent 1.5px,transparent 4px);}
+.bubble{position:relative;background:var(--sage-tint);border-radius:14px;padding:8px 12px;margin:14px 0 4px;align-self:flex-start;display:inline-flex;flex-direction:column;box-shadow:var(--shadow-sm);}
+.bubble b{font-size:17px;font-weight:800;letter-spacing:-.5px;}
+.bubble small{font-size:12px;color:#2e7d4f;font-weight:700;display:flex;align-items:center;gap:4px;margin-top:1px;}
+.bars{display:flex;align-items:flex-end;justify-content:space-between;gap:9px;height:120px;margin-top:6px;}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end;}
+.bar .col{width:100%;max-width:22px;position:relative;height:100%;display:flex;flex-direction:column;justify-content:flex-end;}
+.bar .cap{width:100%;background:var(--yellow-lite);border-radius:11px 11px 0 0;}
+.bar .fill{width:100%;background:var(--yellow);}
+.bar .base{width:100%;height:16px;border-radius:0 0 6px 6px;}
+.bar .col.rounded .fill{border-radius:11px 11px 0 0;}
+.bar label{font-size:11px;color:#5f6f6f;font-weight:600;}
+
+/* bottom nav */
+.nav{position:absolute;left:20px;right:20px;bottom:18px;height:72px;background:var(--lavender-tint);border-radius:999px;box-shadow:0 20px 42px -18px rgba(60,55,45,.5);display:flex;align-items:center;justify-content:space-around;padding:0 16px;z-index:30;}
+.nav .n{display:grid;place-items:center;color:var(--ink);opacity:.5;cursor:pointer;width:50px;height:56px;transition:transform .12s;}
+.nav .n:active{transform:scale(.9);}
+.nav .n.on{opacity:1;border-radius:50%;background:var(--ink);width:56px;}
+.nav .n.on svg *{stroke:#fff;}
+
+/* drawer */
+.scrim{position:absolute;inset:0;background:rgba(60,55,45,.42);z-index:40;opacity:0;pointer-events:none;transition:opacity .28s;}
+.scrim.on{opacity:1;pointer-events:auto;}
+.drawer{position:absolute;top:0;bottom:0;left:0;width:78%;background:var(--bg);z-index:50;transform:translateX(-104%);transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:14px 0 40px -14px rgba(60,55,45,.5);border-radius:0 34px 34px 0;overflow-y:auto;padding:60px 22px 30px;}
+.drawer.on{transform:none;}
+.drawer .prof{display:flex;align-items:center;gap:14px;}
+.drawer .prof .av{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#F3C6A5,#E79B78);display:grid;place-items:center;color:#fff;font-weight:700;font-size:22px;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--sage);}
+.drawer .prof h3{font-size:22px;font-weight:700;}
+.drawer .prof p{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px;}
+.drawer .menu{margin-top:26px;display:flex;flex-direction:column;gap:6px;}
+.mrow{display:flex;align-items:center;gap:14px;padding:14px 8px;border-radius:18px;cursor:pointer;transition:background .15s;}
+.mrow:active{background:var(--sage-tint);}
+.mrow .mi{width:42px;height:42px;border-radius:50%;border:1.5px solid rgba(33,33,33,.16);display:grid;place-items:center;flex-shrink:0;}
+.mrow span{flex:1;font-size:16px;font-weight:600;}
+.mrow.danger .mi{border-color:var(--coral);background:var(--coral-tint);}
+.mrow.danger span{color:#d64b4b;}
+.drawer .ver{text-align:center;color:var(--muted);font-size:12px;font-weight:600;margin-top:28px;}
+
+/* toast */
+.toast{position:absolute;left:50%;bottom:112px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:13px 20px;border-radius:999px;font-size:13.5px;font-weight:600;z-index:80;opacity:0;pointer-events:none;transition:.28s;box-shadow:0 16px 30px -12px rgba(0,0,0,.5);display:flex;align-items:center;gap:9px;white-space:nowrap;max-width:88%;}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast i{width:8px;height:8px;border-radius:50%;background:var(--yellow);}
+
+/* generic sub-page header */
+.subhead{display:flex;align-items:center;justify-content:space-between;padding:6px 22px 0;}
+.subhead .ttl{font-size:26px;font-weight:700;letter-spacing:-.5px;}
+
+/* SOS overlay */
+.sos-screen{position:absolute;inset:0;background:var(--bg);z-index:70;display:none;flex-direction:column;padding:0 22px;overflow-y:auto;}
+.sos-screen.on{display:flex;animation:fade .25s;}
+.sos-top{display:flex;align-items:center;justify-content:space-between;padding-top:60px;}
+.sos-hd{text-align:center;margin-top:8px;}
+.sos-hd h2{font-size:26px;font-weight:800;letter-spacing:.5px;color:#d64b4b;}
+.sos-hd p{font-size:13.5px;color:var(--muted);font-weight:500;margin-top:8px;line-height:1.5;padding:0 10px;}
+.sos-stage{display:grid;place-items:center;margin:22px 0 6px;position:relative;}
+.sos-circle{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff8f8f,var(--coral) 60%,#f04f4f);display:grid;place-items:center;text-align:center;color:#fff;cursor:pointer;box-shadow:0 22px 50px -14px rgba(255,107,107,.85);position:relative;z-index:2;user-select:none;transition:transform .1s;}
+.sos-circle:active{transform:scale(.97);}
+.sos-circle .cnum{font-size:52px;font-weight:800;line-height:1;}
+.sos-circle .clabel{font-size:13px;font-weight:700;letter-spacing:.14em;margin-top:6px;}
+.sos-ring{position:absolute;width:200px;height:200px;border-radius:50%;border:2px solid rgba(255,107,107,.5);animation:sospulse 2.4s ease-out infinite;}
+.sos-ring.b{animation-delay:1.2s;}
+@keyframes sospulse{0%{transform:scale(1);opacity:.6;}100%{transform:scale(1.5);opacity:0;}}
+.notify-card{background:var(--coral-tint);border-radius:26px;padding:16px 18px;margin-top:20px;}
+.notify-card h4{font-size:13px;font-weight:700;color:#c0392b;margin-bottom:6px;}
+.nrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,107,107,.18);}
+.nrow:last-child{border-bottom:none;}
+.nrow .nic{width:40px;height:40px;border-radius:50%;background:#fff;display:grid;place-items:center;flex-shrink:0;}
+.nrow .ni{flex:1;}
+.nrow .ni h5{font-size:14.5px;font-weight:700;}
+.nrow .ni p{font-size:11.5px;color:var(--muted);font-weight:500;}
+.nrow .chk{width:26px;height:26px;border-radius:50%;background:#e3b3b3;display:grid;place-items:center;transition:.3s;}
+.nrow.done .chk{background:#2ec07f;}
+.map-thumb{margin-top:16px;height:120px;border-radius:24px;overflow:hidden;position:relative;box-shadow:var(--shadow-sm);}
+.cancel-btn{margin:16px 0 30px;background:var(--white);border:none;border-radius:999px;padding:16px;font-family:var(--font);font-size:16px;font-weight:700;box-shadow:var(--shadow-sm);cursor:pointer;}
+
+/* map */
+.mapwrap{position:absolute;inset:0;}
+.mapbg{position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,#E7ECE4,#DCE6DE 55%,#D3E0DF);}
+.mapbg .water{position:absolute;border-radius:40%;background:var(--lavender-tint);}
+.mapbg .road{position:absolute;background:#F3F3EE;border-radius:14px;}
+.mgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(120,140,130,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(120,140,130,.12) 1px,transparent 1px);background-size:52px 52px;}
+.mpin{position:absolute;transform:translate(-50%,-50%);z-index:4;cursor:pointer;}
+.mpin .badge{width:38px;height:38px;border-radius:50%;background:#fff;box-shadow:var(--shadow-sm);display:grid;place-items:center;border:2px solid #fff;transition:transform .12s;}
+.mpin:active .badge{transform:scale(.88);}
+.me-dot{position:absolute;transform:translate(-50%,-50%);z-index:3;}
+.me-dot .c{width:20px;height:20px;border-radius:50%;background:var(--yellow);border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.25);}
+.me-dot .halo{position:absolute;inset:-13px;border-radius:50%;background:rgba(252,253,118,.4);animation:sospulse 2.6s ease-out infinite;}
+.map-search{position:absolute;top:60px;left:18px;right:18px;z-index:10;}
+.searchpill{background:var(--white);border-radius:999px;box-shadow:var(--shadow);display:flex;align-items:center;gap:11px;padding:14px 16px;}
+.searchpill input{border:none;outline:none;font-family:var(--font);font-size:14.5px;flex:1;background:transparent;color:var(--ink);}
+.recenter{position:absolute;right:18px;bottom:210px;z-index:12;}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:30px 30px 0 0;box-shadow:0 -16px 36px -18px rgba(60,55,45,.4);z-index:11;padding:8px 20px 22px;}
+.grab{width:44px;height:5px;border-radius:6px;background:#ddd;margin:6px auto 12px;}
+.mini{display:flex;gap:14px;overflow-x:auto;}
+.minicard{width:150px;flex-shrink:0;border-radius:22px;overflow:hidden;box-shadow:var(--shadow-sm);cursor:pointer;position:relative;}
+.minicard .mart{height:96px;}
+.minicard .mbody{padding:11px 12px;}
+.minicard h4{font-size:14px;font-weight:700;}
+.minicard p{font-size:11px;color:var(--muted);font-weight:500;margin-top:2px;}
+.minicard .mstatus{position:absolute;top:9px;left:9px;background:#fff;border-radius:999px;padding:4px 9px;font-size:10px;font-weight:700;display:flex;align-items:center;gap:5px;}
+.minicard .mstatus i{width:6px;height:6px;border-radius:50%;}
+
+/* chatbot */
+.chat-scroll{padding:14px 20px 20px;display:flex;flex-direction:column;gap:14px;}
+.msg{max-width:80%;padding:13px 16px;border-radius:22px;font-size:14.5px;line-height:1.45;font-weight:500;}
+.msg.bot{align-self:flex-start;background:var(--lavender-tint);border-bottom-left-radius:8px;}
+.msg.user{align-self:flex-end;background:var(--yellow);border-bottom-right-radius:8px;}
+.msg.bot-wrap{display:flex;gap:9px;align-items:flex-end;align-self:flex-start;max-width:86%;}
+.msg.bot-wrap .bav{width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(33,33,33,.18);display:grid;place-items:center;flex-shrink:0;background:var(--bg);}
+.msg-pill{display:inline-flex;align-items:center;gap:8px;background:var(--white);border-radius:999px;padding:9px 14px;font-size:13px;font-weight:700;margin-top:8px;box-shadow:var(--shadow-sm);cursor:pointer;width:fit-content;}
+.suggest{display:flex;gap:9px;padding:8px 20px;overflow-x:auto;}
+.suggest .s{background:var(--white);border-radius:999px;padding:10px 16px;font-size:13px;font-weight:600;white-space:nowrap;box-shadow:var(--shadow-sm);cursor:pointer;flex-shrink:0;}
+.inputbar{position:absolute;left:16px;right:16px;bottom:18px;display:flex;align-items:center;gap:10px;background:var(--white);border-radius:999px;padding:8px 8px 8px 20px;box-shadow:var(--shadow);z-index:20;}
+.inputbar input{border:none;outline:none;flex:1;font-family:var(--font);font-size:15px;background:transparent;}
+
+/* messages */
+.thread-row{display:flex;align-items:center;gap:14px;padding:14px 22px;cursor:pointer;transition:background .15s;}
+.thread-row:active{background:var(--sage-tint);}
+.thread-row.pinned{background:var(--yellow-lite);margin:0 14px;border-radius:22px;}
+.thread-row .tav{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:18px;flex-shrink:0;}
+.thread-row .tinfo{flex:1;min-width:0;}
+.thread-row .tinfo .tn{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:700;}
+.thread-row .tinfo .tp{font-size:13px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.thread-row .tmeta{text-align:right;flex-shrink:0;}
+.thread-row .tmeta .tt{font-size:11px;color:var(--muted);font-weight:600;}
+.thread-row .tmeta .badge{margin-top:6px;margin-left:auto;width:22px;height:22px;border-radius:50%;background:var(--coral);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;}
+
+/* profile */
+.pf-photo{width:112px;height:112px;border-radius:50%;margin:14px auto 0;position:relative;background:linear-gradient(135deg,#F3C6A5,#E79B78);display:grid;place-items:center;color:#fff;font-weight:700;font-size:40px;box-shadow:0 0 0 4px var(--bg),0 0 0 6px var(--sage);}
+.pf-cam{position:absolute;bottom:2px;right:2px;width:34px;height:34px;border-radius:50%;background:var(--yellow);display:grid;place-items:center;border:3px solid var(--bg);cursor:pointer;}
+.pf-name{text-align:center;font-size:25px;font-weight:700;margin-top:14px;}
+.verif{display:flex;justify-content:center;margin-top:8px;}
+.verif .v{display:inline-flex;align-items:center;gap:6px;background:var(--white);border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:700;box-shadow:var(--shadow-sm);}
+.infosec{margin:16px 22px 0;border-radius:30px;padding:18px 20px;box-shadow:var(--shadow);}
+.infosec h4{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#6a6a6a;margin-bottom:6px;}
+.irow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(33,33,33,.08);}
+.irow:last-child{border-bottom:none;}
+.irow .k{font-size:13.5px;color:#59564e;font-weight:500;}
+.irow .val{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:7px;}
+.callbtn{width:36px;height:36px;border-radius:50%;background:var(--ink);display:grid;place-items:center;cursor:pointer;}
+.save-btn{margin:20px 22px 8px;background:var(--ink);color:#fff;border:none;border-radius:999px;padding:17px;width:calc(100% - 44px);font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;}
+
+/* favourites */
+.fav-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px 22px;}
+.fav-card{position:relative;height:180px;border-radius:26px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;}
+.fav-card .art{position:absolute;inset:0;}
+.fav-card .scrim{position:absolute;left:0;right:0;bottom:0;height:60%;background:linear-gradient(to top,rgba(22,20,16,.82),transparent);}
+.fav-card .status{position:absolute;top:11px;right:11px;background:var(--white);border-radius:999px;padding:5px 10px;font-size:10.5px;font-weight:700;display:flex;align-items:center;gap:5px;cursor:pointer;}
+.fav-card .txt{position:relative;padding:14px;color:#fff;z-index:2;}
+.fav-card .txt h4{font-size:15px;font-weight:700;}
+.fav-card .txt p{font-size:11px;opacity:.9;margin-top:2px;}
+
+/* help */
+.helpsearch{margin:12px 22px 4px;background:var(--white);border-radius:999px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:11px;padding:14px 18px;}
+.helpsearch input{border:none;outline:none;flex:1;font-family:var(--font);font-size:14.5px;background:transparent;}
+.help-tiles{display:grid;grid-template-columns:1fr 1fr;gap:13px;padding:14px 22px 4px;}
+.help-tile{border-radius:26px;padding:16px;box-shadow:var(--shadow);cursor:pointer;min-height:110px;display:flex;flex-direction:column;justify-content:space-between;}
+.help-tile .ico{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.5);border:1.5px solid rgba(33,33,33,.16);display:grid;place-items:center;}
+.help-tile h4{font-size:15px;font-weight:700;line-height:1.15;}
+.faq{margin:6px 22px 0;}
+.faq-item{background:var(--white);border-radius:20px;box-shadow:var(--shadow-sm);margin-bottom:10px;overflow:hidden;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer;font-size:14.5px;font-weight:600;gap:12px;}
+.faq-q .cv{transition:transform .25s;}
+.faq-item.open .faq-q .cv{transform:rotate(180deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 18px;font-size:13.5px;color:#59564e;font-weight:500;line-height:1.5;}
+.faq-item.open .faq-a{max-height:200px;padding:0 18px 16px;}
+.help-banner{margin:16px 22px;background:var(--yellow);border-radius:28px;padding:22px;text-align:center;}
+.help-banner h3{font-size:19px;font-weight:700;}
+.help-banner p{font-size:13px;color:#59564e;font-weight:500;margin:6px 0 14px;}
+.dark-pill{background:var(--ink);color:#fff;border:none;border-radius:999px;padding:14px 24px;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;}
+
+/* about */
+.about-logo{width:104px;height:104px;border-radius:50%;background:var(--yellow);display:grid;place-items:center;margin:20px auto 0;box-shadow:var(--shadow);}
+.about-name{text-align:center;font-size:27px;font-weight:700;margin-top:16px;letter-spacing:-.5px;}
+.about-tag{text-align:center;font-size:15px;color:var(--muted);font-weight:500;margin-top:4px;}
+.about-ver{text-align:center;font-size:12px;color:var(--muted);font-weight:600;margin-top:8px;}
+.about-row{margin:10px 22px 0;background:var(--white);border-radius:20px;box-shadow:var(--shadow-sm);padding:16px 18px;cursor:pointer;}
+.about-row .r1{display:flex;align-items:center;justify-content:space-between;font-size:15.5px;font-weight:700;}
+.about-row p{font-size:12.5px;color:#59564e;font-weight:500;margin-top:8px;line-height:1.5;display:none;}
+.about-row.open p{display:block;}
+.about-social{display:flex;justify-content:center;gap:14px;margin-top:22px;}
+.about-foot{text-align:center;font-size:11.5px;color:var(--muted);font-weight:600;margin:16px 22px 0;}
+
+/* login */
+.login{position:absolute;inset:0;overflow-y:auto;padding:0 26px 30px;display:flex;flex-direction:column;}
+.login .logo{width:96px;height:96px;border-radius:50%;background:var(--yellow);display:grid;place-items:center;margin:70px auto 0;box-shadow:var(--shadow);}
+.login h1{text-align:center;font-size:36px;font-weight:700;margin-top:20px;letter-spacing:-1px;}
+.login .tg{text-align:center;font-size:15px;color:var(--muted);font-weight:500;margin-top:6px;}
+.role{border-radius:30px;padding:20px;box-shadow:var(--shadow);margin-top:18px;cursor:pointer;transition:transform .12s;}
+.role:active{transform:scale(.98);}
+.role .rt{display:flex;align-items:flex-start;justify-content:space-between;}
+.role .ico{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.55);border:1.5px solid rgba(33,33,33,.18);display:grid;place-items:center;}
+.role h3{font-size:21px;font-weight:700;margin-top:14px;}
+.role p{font-size:13.5px;color:#59564e;font-weight:500;margin-top:4px;}
+.role.admin{transform:scale(.97);opacity:.96;}
+.loginform{margin-top:20px;display:none;}
+.loginform.on{display:block;animation:fade .3s;}
+.inpt{background:var(--white);border-radius:999px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:10px;padding:15px 20px;margin-bottom:12px;}
+.inpt input{border:none;outline:none;flex:1;font-family:var(--font);font-size:15px;background:transparent;}
+.forgot{text-align:right;font-size:13px;color:var(--muted);font-weight:600;cursor:pointer;}
+.signin{background:var(--ink);color:#fff;border:none;border-radius:999px;padding:16px;width:100%;font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;margin-top:14px;}
+.oauth{display:flex;gap:12px;margin-top:14px;}
+.oauth button{flex:1;background:var(--white);border:none;border-radius:999px;padding:14px;font-family:var(--font);font-size:14px;font-weight:700;box-shadow:var(--shadow-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.newhere{text-align:center;font-size:13.5px;color:var(--muted);font-weight:600;margin-top:16px;}
+.newhere b{color:var(--ink);}
+
+/* ADMIN */
+.a-top{display:flex;align-items:center;justify-content:space-between;padding:6px 22px 0;}
+.a-title{font-size:24px;font-weight:700;letter-spacing:-.5px;}
+.a-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#9DB8E0,#6f8fc9);display:grid;place-items:center;color:#fff;font-weight:700;}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;padding:16px 22px 0;}
+.kpi{border-radius:26px;padding:16px;box-shadow:var(--shadow);}
+.kpi .kt{display:flex;align-items:center;justify-content:space-between;}
+.kpi .big{font-size:28px;font-weight:800;letter-spacing:-1px;margin-top:12px;}
+.kpi .lbl{font-size:12.5px;color:#59564e;font-weight:600;margin-top:2px;}
+.kpi .trend{font-size:11px;font-weight:700;color:#2e7d4f;display:flex;align-items:center;gap:3px;margin-top:6px;}
+.a-map{margin:16px 22px 0;border-radius:28px;overflow:hidden;box-shadow:var(--shadow);position:relative;height:170px;}
+.a-legend{display:flex;gap:14px;padding:12px 22px 0;}
+.a-legend span{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#59564e;}
+.a-legend i{width:9px;height:9px;border-radius:50%;}
+.alertrow{margin:12px 22px 0;background:var(--white);border-radius:20px;box-shadow:var(--shadow-sm);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;position:relative;overflow:hidden;}
+.alertrow.active-edge::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--coral);}
+.alertrow .aic{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;}
+.alertrow .ainfo{flex:1;min-width:0;}
+.alertrow .ainfo h4{font-size:14.5px;font-weight:700;}
+.alertrow .ainfo p{font-size:11.5px;color:var(--muted);font-weight:500;margin-top:2px;}
+.sbadge{font-size:10.5px;font-weight:700;padding:5px 10px;border-radius:999px;white-space:nowrap;}
+.sb-active{background:var(--coral-tint);color:#c0392b;} .sb-prog{background:var(--yellow-tint);color:#8a7a00;} .sb-res{background:var(--sage-tint);color:#3c7060;}
+.qa{display:flex;gap:11px;padding:14px 22px 0;overflow-x:auto;}
+.qa .q{flex-shrink:0;border-radius:20px;padding:14px 16px;box-shadow:var(--shadow-sm);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;}
+.a-sidebar{position:absolute;top:0;bottom:0;left:0;width:74%;background:var(--bg);z-index:50;transform:translateX(-104%);transition:transform .3s;box-shadow:14px 0 40px -14px rgba(60,55,45,.5);border-radius:0 34px 34px 0;padding:56px 18px 24px;overflow-y:auto;}
+.a-sidebar.on{transform:none;}
+.a-sidebar .sb-logo{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:700;padding:0 8px 14px;}
+.srow{display:flex;align-items:center;gap:13px;padding:13px 14px;border-radius:16px;cursor:pointer;font-size:15px;font-weight:600;}
+.srow.on{background:var(--yellow);}
+.srow:active{background:var(--sage-tint);}
+.srow.on:active{background:var(--yellow);}
+.a-chip-row{display:flex;gap:10px;padding:14px 22px 0;overflow-x:auto;}
+.trow{margin:11px 22px 0;background:var(--white);border-radius:20px;box-shadow:var(--shadow-sm);padding:13px 15px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+.trow .tav{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:15px;flex-shrink:0;}
+.trow .ti{flex:1;min-width:0;}
+.trow .ti h4{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:6px;}
+.trow .ti p{font-size:11.5px;color:var(--muted);font-weight:500;margin-top:2px;}
+.dot-st{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.summary-strip{display:flex;gap:11px;padding:14px 22px 0;}
+.sstat{flex:1;border-radius:20px;padding:14px;box-shadow:var(--shadow-sm);text-align:center;}
+.sstat .b{font-size:20px;font-weight:800;}
+.sstat .l{font-size:10.5px;color:#59564e;font-weight:600;margin-top:3px;}
+.stepper{margin:12px 22px 0;background:var(--white);border-radius:24px;box-shadow:var(--shadow-sm);padding:18px;display:none;}
+.stepper.on{display:block;animation:fade .3s;}
+.step{display:flex;gap:14px;position:relative;padding-bottom:18px;}
+.step:last-child{padding-bottom:0;}
+.step .sd{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;z-index:2;}
+.step::before{content:"";position:absolute;left:10.5px;top:22px;bottom:0;width:2px;background:#e5e2da;}
+.step:last-child::before{display:none;}
+.step .stx h5{font-size:14px;font-weight:700;}
+.step .stx p{font-size:11.5px;color:var(--muted);font-weight:500;margin-top:2px;}
+.rchart{margin:14px 22px 0;border-radius:28px;padding:20px;box-shadow:var(--shadow);}
+.donut-lg{position:relative;width:150px;height:150px;margin:6px auto 0;}
+.donut-lg .ctr{position:absolute;inset:0;display:grid;place-items:center;font-size:24px;font-weight:800;}
+.dlegend{margin-top:14px;display:flex;flex-direction:column;gap:9px;}
+.dlegend .dl{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;}
+.dlegend .dl i{width:11px;height:11px;border-radius:3px;}
+.dlegend .dl b{margin-left:auto;font-weight:800;}
+.daterange{background:var(--white);border-radius:999px;box-shadow:var(--shadow-sm);padding:10px 16px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;cursor:pointer;}
+</style>
+<style>
+body{background:linear-gradient(160deg,#EDEBE5,#E3E1DA);min-height:100vh;display:block;padding:56px 40px 90px;color:#212121;font-family:var(--font);}
+.cover{max-width:1400px;margin:0 auto 10px;}
+.cover .brandrow{display:flex;align-items:center;gap:14px;}
+.cover .bmark{width:56px;height:56px;border-radius:16px;background:#212121;display:grid;place-items:center;}
+.cover h1{font-size:44px;font-weight:800;letter-spacing:-1.5px;}
+.cover h1 span{color:#C9A100;}
+.cover .sub{font-size:16px;color:#6a685f;font-weight:500;margin-top:8px;max-width:680px;line-height:1.5;}
+.legend{max-width:1400px;margin:26px auto 8px;display:flex;flex-wrap:wrap;gap:22px;align-items:center;background:#FDFEFF;border-radius:22px;padding:18px 24px;box-shadow:0 12px 30px -18px rgba(0,0,0,.25);}
+.legend .grp{display:flex;align-items:center;gap:10px;}
+.legend .sw{width:30px;height:30px;border-radius:9px;box-shadow:0 2px 6px rgba(0,0,0,.12);}
+.legend .lb{font-size:12.5px;font-weight:600;}
+.legend .lb small{display:block;color:#8A8A8A;font-weight:600;font-family:monospace;font-size:11px;}
+.legend .div{width:1px;height:34px;background:#eceae2;}
+.section{max-width:1400px;margin:44px auto 0;}
+.section-head{display:flex;align-items:center;gap:14px;margin-bottom:26px;}
+.section-head .tag{background:#212121;color:#fff;font-size:13px;font-weight:700;padding:8px 16px;border-radius:999px;letter-spacing:.02em;}
+.section-head .ln{flex:1;height:2px;background:#d8d6ce;border-radius:2px;}
+.section-head .ct{font-size:13px;color:#8A8A8A;font-weight:600;}
+.frames{display:flex;flex-wrap:wrap;gap:20px 26px;}
+.frame{display:flex;flex-direction:column;gap:12px;width:250px;}
+.frame .cap{font-size:13px;font-weight:700;color:#4b4a45;display:flex;align-items:center;gap:9px;padding-left:4px;}
+.frame .cap .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.phone-mini{width:250px;padding:6px;background:#0c0c0c;border-radius:40px;box-shadow:0 26px 46px -22px rgba(50,45,35,.55);}
+.phone-mini .vp{position:relative;width:238px;height:472px;background:#FAFAF9;border-radius:34px;overflow:hidden;}
+.phone-mini .notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:66px;height:17px;background:#0c0c0c;border-radius:11px;z-index:80;}
+.inner{position:relative;width:393px;height:781px;transform:scale(.6056);transform-origin:top left;}
+.inner .page,.inner .apage,.inner .login,.inner .drawer{display:block!important;position:absolute!important;inset:0!important;transform:none!important;overflow:hidden!important;padding-bottom:0!important;animation:none!important;}
+.inner .sos-screen{display:flex!important;position:absolute!important;inset:0!important;overflow:hidden!important;}
+.inner .nav{display:flex!important;}
+.inner .drawer{width:100%!important;border-radius:0!important;}
+.foot{max-width:1400px;margin:56px auto 0;text-align:center;color:#9a988f;font-size:12.5px;font-weight:600;}
+</style></head><body><div class="cover"><div class="brandrow"><div class="bmark"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" fill="#FCFD76"/><path d="M9 12l2 2 4-4" stroke="#212121" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+<div><h1>Yatri<span>Kavach</span> · Full App Overview</h1></div></div>
+<div class="sub">Every screen of the tourist &amp; admin apps on one canvas — pastel flat-UI system (Urbanist, high-radius, dashed-tick donuts, black-circle actions). Import into Figma with the free “html.to.design” plugin, or screenshot for handoff.</div></div>
+<div class="legend">
+<div class="grp"><div class="sw" style="background:#FCFD76"></div><div class="lb">Primary<small>#FCFD76</small></div></div>
+<div class="grp"><div class="sw" style="background:#D7D7F4"></div><div class="lb">Lavender<small>#D7D7F4</small></div></div>
+<div class="grp"><div class="sw" style="background:#C3D6D6"></div><div class="lb">Sage<small>#C3D6D6</small></div></div>
+<div class="grp"><div class="sw" style="background:#F5F0DC"></div><div class="lb">Cream<small>#F5F0DC</small></div></div>
+<div class="grp"><div class="sw" style="background:#FF6B6B"></div><div class="lb">SOS Coral<small>#FF6B6B</small></div></div>
+<div class="grp"><div class="sw" style="background:#212121"></div><div class="lb">Ink<small>#212121</small></div></div>
+<div class="div"></div>
+<div class="grp"><div class="lb" style="font-size:14px;">Typeface<small style="font-family:Urbanist;font-size:12px;">Urbanist · 40/28/24/16</small></div></div>
+</div>
+<div class="section"><div class="section-head"><span class="tag">ENTRY</span><span class="ct">1 screen</span><span class="ln"></span></div><div class="frames"><div class="frame"><div class="cap"><span class="dot" style="background:#C3D6D6"></span>01 · Login / Role Select</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="login">
+    <div class="logo"><svg width="46" height="46" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" fill="#212121"/><path d="M9 12l2 2 4-4" stroke="#FCFD76" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h1>YatriKavach</h1>
+    <div class="tg">Travel Safe, Travel Smart</div>
+
+    <div class="role bg-s" onclick="pickRole('tourist')">
+      <div class="rt">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 8V6a4 4 0 0 1 8 0v2M5 8h14l-1 13H6L5 8z" stroke="#212121" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+        <div class="ib-arrow"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <h3>I'm a Tourist</h3>
+      <p>Access safety tools, SOS, and local guidance</p>
+    </div>
+
+    <div class="role admin bg-l" onclick="pickRole('admin')">
+      <div class="rt">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="8" height="8" rx="2" stroke="#212121" stroke-width="1.8"/><rect x="13" y="4" width="8" height="5" rx="2" stroke="#212121" stroke-width="1.8"/><rect x="3" y="14" width="8" height="6" rx="2" stroke="#212121" stroke-width="1.8"/><rect x="13" y="11" width="8" height="9" rx="2" stroke="#212121" stroke-width="1.8"/></svg></div>
+        <div class="ib-arrow"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+      <h3>I'm an Admin</h3>
+      <p>Monitor tourist safety and manage alerts</p>
+    </div>
+
+    <div class="loginform" id="loginform">
+      <div class="inpt"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="#8A8A8A" stroke-width="1.8"/><path d="M4 7l8 6 8-6" stroke="#8A8A8A" stroke-width="1.8"/></svg><input placeholder="Email or phone number" value="alex.tourist@email.com"></div>
+      <div class="inpt"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="10" rx="3" stroke="#8A8A8A" stroke-width="1.8"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="#8A8A8A" stroke-width="1.8"/></svg><input type="password" placeholder="Password" value="password123"></div>
+      <div class="forgot" onclick="toast('Password reset link sent')">Forgot Password?</div>
+      <button class="signin" id="signinBtn" onclick="doSignIn()">Sign In as Tourist</button>
+      <div class="oauth">
+        <button onclick="toast('Google sign-in (demo)')">Google</button>
+        <button onclick="toast('Apple sign-in (demo)')">Apple</button>
+      </div>
+      <div class="newhere">New here? <b onclick="toast('Create account (demo)')">Create Account</b></div>
+    </div>
+  </div></div></div></div></div></div></div>
+<div class="section"><div class="section-head"><span class="tag">TOURIST APP</span><span class="ct">11 screens</span><span class="ln"></span></div><div class="frames"><div class="frame"><div class="cap"><span class="dot" style="background:#FCD400"></span>02 · Home Dashboard</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="page active" id="home">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="17" height="12" viewBox="0 0 17 12"><path d="M8.5 2.6c2.1 0 4 .8 5.4 2.2l1.4-1.4A10 10 0 0 0 8.5.5 10 10 0 0 0 1.7 3.4l1.4 1.4A7.5 7.5 0 0 1 8.5 2.6z"/><circle cx="8.5" cy="10" r="1.7"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="topbar">
+      <div class="ib ib-white" onclick="openDrawer()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div class="wordmark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" fill="#212121"/><path d="M9 12l2 2 4-4" stroke="#FCFD76" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>YatriKavach</div>
+      <div class="ib sos-btn" onclick="openSOS()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z" fill="#fff"/></svg></div>
+    </div>
+    <div class="greet">
+      <div class="avatar" onclick="show('profile')">A</div>
+      <h1>Hello Alex!</h1>
+      <div class="loc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11z" stroke="#8A8A8A" stroke-width="2"/><circle cx="12" cy="10" r="2.3" fill="#8A8A8A"/></svg>You're in Jaipur, Rajasthan</div>
+    </div>
+    <div class="score-pill">
+      <div class="donut">
+        <svg width="78" height="78" viewBox="0 0 78 78"><circle cx="39" cy="39" r="33" fill="none" stroke="#a9bfbf" stroke-width="5" stroke-dasharray="1.4 4.4" opacity=".8"/><circle cx="39" cy="39" r="33" fill="none" stroke="#5f7d7d" stroke-width="6" stroke-linecap="round" stroke-dasharray="207" stroke-dashoffset="17" transform="rotate(-90 39 39)"/></svg>
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" stroke="#3c5252" stroke-width="1.8"/><path d="M9 12l2 2 4-4" stroke="#3c5252" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+      </div>
+      <div class="mid"><div class="big">92<sup>/100</sup></div><p>Safety Score</p></div>
+      <div class="ib ib-yellow" onclick="toast('Add emergency contact')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#212121" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="chips" id="homechips">
+      <div class="chip on" onclick="pickChip(this)">All</div>
+      <div class="chip" onclick="pickChip(this)">Nearby Alerts</div>
+      <div class="chip" onclick="pickChip(this)">Saved Places</div>
+    </div>
+    <div class="h-scroll">
+      <div class="pcard" onclick="toast('Live Location Share is Active')"><div class="art" style="background:linear-gradient(160deg,#C7D9F0,#9DB8E0)"></div><div class="scrim"></div><div class="status"><i style="background:#2e7d4f"></i>Active</div><div class="txt"><h4>Live Location Share</h4><p>2 trusted contacts</p></div><div class="ib-arrow go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="pcard" onclick="show('profile')"><div class="art" style="background:linear-gradient(160deg,#F3D9A8,#E7B478)"></div><div class="scrim"></div><div class="status"><i style="background:#2e7d4f"></i>Verified</div><div class="txt"><h4>Digital Tourist ID</h4><p>KYC complete</p></div><div class="ib-arrow go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="pcard" onclick="show('map')"><div class="art" style="background:linear-gradient(160deg,#BFE0D2,#8FC3AE)"></div><div class="scrim"></div><div class="status"><i style="background:#2e7d4f"></i>Open Now</div><div class="txt"><h4>Nearby Police</h4><p>280 m away</p></div><div class="ib-arrow go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="pcard" onclick="toast('Travel advisory: All clear')"><div class="art" style="background:linear-gradient(160deg,#E7C9D6,#CF9DB4)"></div><div class="scrim"></div><div class="status"><i style="background:#d9a800"></i>Updated</div><div class="txt"><h4>Travel Advisory</h4><p>Rajasthan region</p></div><div class="ib-arrow go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="pcard" onclick="openThread('helpline')"><div class="art" style="background:linear-gradient(160deg,#CDD3EE,#9AA3D6)"></div><div class="scrim"></div><div class="status"><i style="background:#2e7d4f"></i>3 saved</div><div class="txt"><h4>Embassy Contacts</h4><p>Germany · +91 11 4419 9199</p></div><div class="ib-arrow go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+    </div>
+    <div class="section-h"><h2>Quick Access</h2><div class="line"></div></div>
+    <div class="grid">
+      <div class="stat bg-y" onclick="show('profile')"><div class="row"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" stroke="#212121" stroke-width="1.8"/><path d="M9 12l2 2 4-4" stroke="#212121" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="ib-arrow"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div><h4>Digital ID</h4><p>Passport &amp; visa verified</p></div></div>
+      <div class="stat bg-l" onclick="show('map')"><div class="row"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11z" stroke="#212121" stroke-width="1.8"/><path d="M12 7v6M9 10h6" stroke="#212121" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="ib-arrow"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div><h4>Nearby Help</h4><p>Police, hospitals, embassy</p></div></div>
+      <div class="stat bg-s" onclick="toast('Trip shared with 2 contacts')"><div class="row"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="18" cy="5" r="2.4" stroke="#212121" stroke-width="1.8"/><circle cx="6" cy="12" r="2.4" stroke="#212121" stroke-width="1.8"/><circle cx="18" cy="19" r="2.4" stroke="#212121" stroke-width="1.8"/><path d="M8.2 10.9l7.6-4.4M8.2 13.1l7.6 4.4" stroke="#212121" stroke-width="1.8"/></svg></div><div class="ib-arrow"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div><h4>Share Trip</h4><p>Send live location</p></div></div>
+      <div class="stat bg-c" onclick="toast('Report form opened (demo)')"><div class="row"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14H6z" stroke="#212121" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12h6M9 16h4" stroke="#212121" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="ib-arrow"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div><h4>Report Issue</h4><p>File a quick report</p></div></div>
+    </div>
+    <div class="chart-card">
+      <div class="top"><div class="ttl"><div class="pie"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v9l6.5 4A9 9 0 1 0 12 3z" stroke="#212121" stroke-width="1.6"/></svg></div><h3>Weekly Check-ins</h3></div></div>
+      <div class="legend"><span><i style="background:var(--yellow)"></i>Checked in</span><span><i style="background:var(--sage-deep)"></i>Auto ping</span><span><i class="hatch"></i>Missed</span></div>
+      <div class="bubble"><b>6/7 days</b><small><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 20L20 4M20 4h-9M20 4v9" stroke="#2e7d4f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>+12% streak</small></div>
+      <div class="bars">
+        <div class="bar"><div class="col"><div class="cap" style="height:14px"></div><div class="fill" style="height:52px"></div><div class="base hatch"></div></div><label>M</label></div>
+        <div class="bar"><div class="col"><div class="cap" style="height:20px"></div><div class="fill" style="height:64px"></div><div class="base hatch"></div></div><label>T</label></div>
+        <div class="bar"><div class="col rounded"><div class="fill" style="height:44px"></div><div class="base hatch"></div></div><label>W</label></div>
+        <div class="bar"><div class="col"><div class="cap" style="height:24px"></div><div class="fill" style="height:70px"></div><div class="base hatch"></div></div><label>T</label></div>
+        <div class="bar"><div class="col"><div class="cap" style="height:16px"></div><div class="fill" style="height:58px"></div><div class="base hatch"></div></div><label>F</label></div>
+        <div class="bar"><div class="col"><div class="cap" style="height:12px"></div><div class="fill" style="height:82px"></div><div class="base hatch"></div></div><label>S</label></div>
+        <div class="bar"><div class="col rounded"><div class="fill" style="height:30px"></div><div class="base hatch"></div></div><label>S</label></div>
+      </div>
+    </div>
+  </div><div class="nav" id="t-nav">
+    <div class="n on" data-tab="home" onclick="show('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9H4z" stroke="#212121" stroke-width="1.9" stroke-linejoin="round"/></svg></div>
+    <div class="n" data-tab="map" onclick="show('map')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11z" stroke="#212121" stroke-width="1.9"/><circle cx="12" cy="10" r="2.4" stroke="#212121" stroke-width="1.9"/></svg></div>
+    <div class="n" data-tab="chatbot" onclick="show('chatbot')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.9L18.7 9l-4.9 1.8L12 15.7l-1.8-4.9L5.3 9l4.9-1.2L12 3z" stroke="#212121" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+    <div class="n" data-tab="messages" onclick="show('messages')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l.9-4.4A8 8 0 1 1 20 12z" stroke="#212121" stroke-width="1.9" stroke-linejoin="round"/></svg></div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#C3D6D6"></span>03 · Map & Zones</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="page" id="map">
+    <div class="mapwrap">
+      <div class="mapbg"><div class="mgrid"></div>
+        <div class="water" style="left:-10%;top:8%;width:180px;height:150px;"></div>
+        <div class="road" style="left:6%;top:44%;width:88%;height:14px;"></div>
+        <div class="road" style="left:34%;top:12%;width:14px;height:76%;"></div>
+        <div class="road" style="left:64%;top:20%;width:14px;height:64%;transform:rotate(6deg);"></div>
+        <div class="mpin" style="left:26%;top:50%;" onclick="toast('Tourist Police Booth · 280 m')"><div class="badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" stroke="#3c7060" stroke-width="1.8"/></svg></div></div>
+        <div class="mpin" style="left:58%;top:30%;" onclick="toast('City Hospital · 1.1 km')"><div class="badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#e26b6b" stroke-width="2.4" stroke-linecap="round"/></svg></div></div>
+        <div class="mpin" style="left:70%;top:62%;" onclick="toast('German Embassy · 3.4 km')"><div class="badge"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="12" rx="2" stroke="#8f7fd6" stroke-width="1.8"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="#8f7fd6" stroke-width="1.8"/></svg></div></div>
+        <div class="mpin" style="left:44%;top:66%;" onclick="toast('Help Booth · 540 m')"><div class="badge"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 17v.01M12 13a2 2 0 1 0-2-2" stroke="#c9a300" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#c9a300" stroke-width="1.6"/></svg></div></div>
+        <div class="mpin" style="left:20%;top:26%;" onclick="toast('24h Pharmacy · 420 m')"><div class="badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 6v12M6 12h12" stroke="#e26b6b" stroke-width="2.2" stroke-linecap="round"/></svg></div></div>
+        <div class="mpin" style="left:80%;top:48%;" onclick="toast('Fire Station · 2.1 km')"><div class="badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3c1 3 4 4 4 8a4 4 0 1 1-8 0c0-2 1-3 2-4" stroke="#e08a3c" stroke-width="1.7" stroke-linejoin="round"/></svg></div></div>
+        <div class="mpin" style="left:52%;top:20%;" onclick="toast('Registered Taxi Stand · 160 m')"><div class="badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 16v-4l2-5h10l2 5v4M5 16h14M5 16v2M19 16v2" stroke="#3c7060" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        <div class="me-dot" style="left:40%;top:58%;"><div class="halo"></div><div class="c"></div></div>
+      </div>
+      <div class="statusbar sb-dark" style="position:relative;z-index:12;"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+      <div class="map-search">
+        <div class="searchpill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#8A8A8A" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#8A8A8A" stroke-width="2" stroke-linecap="round"/></svg><input placeholder="Search safe zones, landmarks..." onkeydown="if(event.key==='Enter')toast('Searching &quot;'+this.value+'&quot;...')"><div class="ib ib-sage" style="width:36px;height:36px;" onclick="toast('Filters opened')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+      </div>
+      <div class="recenter"><div class="ib ib-white" onclick="toast('Re-centered to your location')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3.2" stroke="#212121" stroke-width="1.8"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="#212121" stroke-width="1.8" stroke-linecap="round"/></svg></div></div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="section-h" style="padding:0 4px 10px;"><h2 style="font-size:19px;">Nearby Safe Places</h2><div class="line"></div></div>
+        <div class="mini">
+          <div class="minicard" onclick="toast('Opening Tourist Police Booth')"><div class="mart" style="background:linear-gradient(160deg,#BFE0D2,#8FC3AE)"></div><div class="mstatus"><i style="background:#2e7d4f"></i>Open</div><div class="mbody"><h4>Police Booth</h4><p>280 m · Verified</p></div></div>
+          <div class="minicard" onclick="toast('Opening City Hospital')"><div class="mart" style="background:linear-gradient(160deg,#F3C9C9,#E79B9B)"></div><div class="mstatus"><i style="background:#e26b6b"></i>24×7</div><div class="mbody"><h4>City Hospital</h4><p>1.1 km · Emergency</p></div></div>
+          <div class="minicard" onclick="toast('Opening German Embassy')"><div class="mart" style="background:linear-gradient(160deg,#D7D7F4,#B3B3E6)"></div><div class="mstatus"><i style="background:#8f7fd6"></i>Consular</div><div class="mbody"><h4>Embassy</h4><p>3.4 km · Support</p></div></div>
+          <div class="minicard" onclick="toast('Opening 24h Pharmacy')"><div class="mart" style="background:linear-gradient(160deg,#F5DED0,#E7B79B)"></div><div class="mstatus"><i style="background:#e08a3c"></i>24h</div><div class="mbody"><h4>Apollo Pharmacy</h4><p>420 m · Medicine</p></div></div>
+          <div class="minicard" onclick="toast('Opening Taxi Stand')"><div class="mart" style="background:linear-gradient(160deg,#C3D6D6,#93AE9C)"></div><div class="mstatus"><i style="background:#2e7d4f"></i>Verified</div><div class="mbody"><h4>Taxi Stand</h4><p>160 m · Registered</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div><div class="nav" id="t-nav">
+    <div class="n on" data-tab="home" onclick="show('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9H4z" stroke="#212121" stroke-width="1.9" stroke-linejoin="round"/></svg></div>
+    <div class="n" data-tab="map" onclick="show('map')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11z" stroke="#212121" stroke-width="1.9"/><circle cx="12" cy="10" r="2.4" stroke="#212121" stroke-width="1.9"/></svg></div>
+    <div class="n" data-tab="chatbot" onclick="show('chatbot')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.9L18.7 9l-4.9 1.8L12 15.7l-1.8-4.9L5.3 9l4.9-1.2L12 3z" stroke="#212121" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+    <div class="n" data-tab="messages" onclick="show('messages')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l.9-4.4A8 8 0 1 1 20 12z" stroke="#212121" stroke-width="1.9" stroke-linejoin="round"/></svg></div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#D7D7F4"></span>04 · AI Chatbot</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="page" id="chatbot">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="topbar">
+      <div class="ib ib-white" onclick="show('home')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#212121" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="wordmark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.9L18.7 9l-4.9 1.8L12 15.7l-1.8-4.9L5.3 9l4.9-1.2L12 3z" stroke="#212121" stroke-width="1.7" stroke-linejoin="round"/></svg>YatriKavach AI</div>
+      <div class="ib ib-white" onclick="toast('Clear chat · New topic')"><svg width="20" height="20" viewBox="0 0 24 24" fill="#212121"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></div>
+    </div>
+    <div class="chat-scroll" id="chatScroll" style="padding-bottom:150px;">
+      <div class="msg bot-wrap"><div class="bav"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.9L18.7 9l-4.9 1.8L12 15.7l-1.8-4.9L5.3 9l4.9-1.2L12 3z" stroke="#212121" stroke-width="1.6" stroke-linejoin="round"/></svg></div><div class="msg bot">Hi Alex! I'm your safety assistant. Ask me about local laws, emergency numbers, or safe areas nearby.</div></div>
+    </div>
+    <div class="suggest" style="position:absolute;bottom:82px;left:0;right:0;">
+      <div class="s" onclick="quickAsk('Nearest hospital?')">Nearest Hospital</div>
+      <div class="s" onclick="quickAsk('Translate a phrase')">Translate Phrase</div>
+      <div class="s" onclick="quickAsk('Local laws')">Local Laws</div>
+      <div class="s" onclick="quickAsk('Emergency numbers')">Emergency Numbers</div>
+      <div class="s" onclick="quickAsk('Is the water safe to drink?')">Safe Water?</div>
+      <div class="s" onclick="quickAsk('How much should a taxi cost?')">Taxi Fares</div>
+      <div class="s" onclick="quickAsk('What is the weather today?')">Weather</div>
+    </div>
+    <div class="inputbar">
+      <input id="chatInput" placeholder="Ask YatriKavach AI..." onkeydown="if(event.key==='Enter')sendChat()">
+      <div class="ib ib-white" style="width:40px;height:40px;" onclick="toast('Listening... (demo)')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" stroke="#212121" stroke-width="1.8"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="#212121" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+      <div class="ib-arrow" style="width:44px;height:44px;" onclick="sendChat()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+  </div><div class="nav" id="t-nav">
+    <div class="n on" data-tab="home" onclick="show('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9H4z" stroke="#212121" stroke-width="1.9" stroke-linejoin="round"/></svg></div>
+    <div class="n" data-tab="map" onclick="show('map')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11z" stroke="#212121" stroke-width="1.9"/><circle cx="12" cy="10" r="2.4" stroke="#212121" stroke-width="1.9"/></svg></div>
+    <div class="n" data-tab="chatbot" onclick="show('chatbot')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.9L18.7 9l-4.9 1.8L12 15.7l-1.8-4.9L5.3 9l4.9-1.2L12 3z" stroke="#212121" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+    <div class="n" data-tab="messages" onclick="show('messages')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l.9-4.4A8 8 0 1 1 20 12z" stroke="#212121" stroke-width="1.9" stroke-linejoin="round"/></svg></div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#F5C86B"></span>05 · Messages</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="page" id="messages">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="subhead"><div class="ttl">Messages</div><div style="display:flex;gap:10px;"><div class="ib ib-white" onclick="toast('Search messages')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#212121" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="ib ib-white" onclick="toast('New message')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 20l1-4L16 5l3 3L8 19l-4 1z" stroke="#212121" stroke-width="1.8" stroke-linejoin="round"/></svg></div></div></div>
+    <div style="height:14px;"></div>
+    <div class="thread-row pinned" onclick="openThread('support')"><div class="tav" style="background:#212121">YK</div><div class="tinfo"><div class="tn">YatriKavach Support <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12l4-8 4 4 4-2 2 8H5z" stroke="#8a7a00" stroke-width="1.6"/></svg></div><div class="tp">Your Digital ID is verified ✓</div></div><div class="tmeta"><div class="tt">now</div></div></div>
+    <div class="thread-row" onclick="openThread('helpline')"><div class="tav" style="background:#8FC3AE">TH</div><div class="tinfo"><div class="tn">Tourist Helpline Jaipur</div><div class="tp">We're available 24×7 for you.</div></div><div class="tmeta"><div class="tt">10m</div><div class="badge">2</div></div></div>
+    <div class="thread-row" onclick="openThread('sarah')"><div class="tav" style="background:#E79B78">S</div><div class="tinfo"><div class="tn">Emergency Contact · Sarah</div><div class="tp">Text me when you reach the hotel!</div></div><div class="tmeta"><div class="tt">1h</div></div></div>
+    <div class="thread-row" onclick="openThread('raj')"><div class="tav" style="background:#8f7fd6">R</div><div class="tinfo"><div class="tn">Local Guide · Raj</div><div class="tp">City Palace opens at 9:30 AM.</div></div><div class="tmeta"><div class="tt">3h</div></div></div>
+    <div class="thread-row" onclick="openThread('embassy')"><div class="tav" style="background:#5f7d7d">DE</div><div class="tinfo"><div class="tn">German Embassy · New Delhi</div><div class="tp">Your consular registration is active.</div></div><div class="tmeta"><div class="tt">1d</div></div></div>
+    <div class="thread-row" onclick="openThread('hotel')"><div class="tav" style="background:#E7B478">RH</div><div class="tinfo"><div class="tn">Rambagh Hotel · Front Desk</div><div class="tp">Airport pickup confirmed for 2 PM.</div></div><div class="tmeta"><div class="tt">1d</div></div></div>
+  </div><div class="nav" id="t-nav">
+    <div class="n on" data-tab="home" onclick="show('home')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 11l8-7 8 7v9H4z" stroke="#212121" stroke-width="1.9" stroke-linejoin="round"/></svg></div>
+    <div class="n" data-tab="map" onclick="show('map')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11z" stroke="#212121" stroke-width="1.9"/><circle cx="12" cy="10" r="2.4" stroke="#212121" stroke-width="1.9"/></svg></div>
+    <div class="n" data-tab="chatbot" onclick="show('chatbot')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.9L18.7 9l-4.9 1.8L12 15.7l-1.8-4.9L5.3 9l4.9-1.2L12 3z" stroke="#212121" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+    <div class="n" data-tab="messages" onclick="show('messages')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l.9-4.4A8 8 0 1 1 20 12z" stroke="#212121" stroke-width="1.9" stroke-linejoin="round"/></svg></div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#D7D7F4"></span>06 · Conversation</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="page" id="thread">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="topbar">
+      <div class="ib ib-white" onclick="show('messages')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#212121" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="wordmark" id="threadName" style="font-size:17px;">Support</div>
+      <div class="ib ib-white" onclick="toast('Call (demo)')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z" stroke="#212121" stroke-width="1.6"/></svg></div>
+    </div>
+    <div class="chat-scroll" id="threadScroll" style="padding-bottom:150px;"></div>
+    <div class="inputbar">
+      <input id="threadInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendThread()">
+      <div class="ib-arrow" style="width:44px;height:44px;" onclick="sendThread()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#C3D6D6"></span>07 · Profile Details</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="page" id="profile">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="subhead"><div class="ib ib-white" onclick="show('home')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#212121" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ttl">Profile Details</div><div class="ib ib-white" onclick="toast('Edit mode (demo)')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 20l1-4L16 5l3 3L8 19l-4 1z" stroke="#212121" stroke-width="1.8" stroke-linejoin="round"/></svg></div></div>
+    <div class="pf-photo">A<div class="pf-cam" onclick="toast('Change photo (demo)')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="3" stroke="#212121" stroke-width="1.8"/><circle cx="12" cy="13" r="3.4" stroke="#212121" stroke-width="1.8"/><path d="M8 7l1.5-2h5L16 7" stroke="#212121" stroke-width="1.8"/></svg></div></div>
+    <div class="pf-name">Alex Morgan</div>
+    <div class="verif"><div class="v"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#16C098"/><path d="M8 12l2.5 2.5L16 9" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>Verified Tourist</div></div>
+    <div class="infosec bg-l"><h4>Personal Info</h4>
+      <div class="irow"><span class="k">Full Name</span><span class="val">Alex Morgan</span></div>
+      <div class="irow"><span class="k">Nationality</span><span class="val">🇩🇪 Germany</span></div>
+      <div class="irow"><span class="k">Passport No.</span><span class="val">••••••7421</span></div>
+      <div class="irow"><span class="k">Date of Birth</span><span class="val">14 Mar 1994</span></div>
+      <div class="irow"><span class="k">Blood Group</span><span class="val">O+</span></div>
+      <div class="irow"><span class="k">Languages</span><span class="val">EN · DE</span></div>
+    </div>
+    <div class="infosec bg-s"><h4>Travel Info</h4>
+      <div class="irow"><span class="k">Visa Type</span><span class="val">Tourist (e-Visa)</span></div>
+      <div class="irow"><span class="k">Valid Till</span><span class="val">12 Dec 2026</span></div>
+      <div class="irow"><span class="k">Entry Date</span><span class="val">18 Aug 2026</span></div>
+      <div class="irow"><span class="k">Current City</span><span class="val">Jaipur</span></div>
+      <div class="irow"><span class="k">Staying At</span><span class="val">Rambagh Hotel</span></div>
+      <div class="irow"><span class="k">Travel Insurance</span><span class="val">Active ✓</span></div>
+    </div>
+    <div class="infosec bg-c"><h4>Emergency Contacts</h4>
+      <div class="irow"><div><div class="val">Sarah Morgan</div><span class="k">Sister · +49 176 555 0132</span></div><div class="callbtn" onclick="toast('Calling Sarah...')"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z"/></svg></div></div>
+      <div class="irow"><div><div class="val">Liam Carter</div><span class="k">Friend · +49 176 555 0199</span></div><div class="callbtn" onclick="toast('Calling Liam...')"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z"/></svg></div></div>
+    </div>
+    <button class="save-btn" onclick="toast('Changes saved ✓')">Save Changes</button>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#FF6B6B"></span>08 · Favourite Places</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="page" id="favourites">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="subhead"><div class="ib ib-white" onclick="show('home')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#212121" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ttl">Favourite Places</div><div class="ib ib-white" onclick="toast('Sort by distance')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+    <div class="fav-grid">
+      <div class="fav-card" onclick="toast('Opening Hawa Mahal')"><div class="art" style="background:linear-gradient(160deg,#E9B98F,#D18A5B)"></div><div class="scrim"></div><div class="status" onclick="event.stopPropagation();toggleHeart(this)"><i style="background:#FF6B6B"></i>Saved</div><div class="txt"><h4>Hawa Mahal</h4><p>1.2 km · Landmark</p></div></div>
+      <div class="fav-card" onclick="toast('Opening City Palace')"><div class="art" style="background:linear-gradient(160deg,#D7C7A8,#B89B6B)"></div><div class="scrim"></div><div class="status" onclick="event.stopPropagation();toggleHeart(this)"><i style="background:#FF6B6B"></i>Saved</div><div class="txt"><h4>City Palace</h4><p>2.0 km · Heritage</p></div></div>
+      <div class="fav-card" onclick="toast('Opening Amber Fort')"><div class="art" style="background:linear-gradient(160deg,#C9B79A,#A98F6a)"></div><div class="scrim"></div><div class="status" onclick="event.stopPropagation();toggleHeart(this)"><i style="background:#FF6B6B"></i>Saved</div><div class="txt"><h4>Amber Fort</h4><p>11 km · Fort</p></div></div>
+      <div class="fav-card" onclick="toast('Opening Jantar Mantar')"><div class="art" style="background:linear-gradient(160deg,#BFD0C4,#93AE9C)"></div><div class="scrim"></div><div class="status" onclick="event.stopPropagation();toggleHeart(this)"><i style="background:#FF6B6B"></i>Saved</div><div class="txt"><h4>Jantar Mantar</h4><p>2.3 km · Observatory</p></div></div>
+      <div class="fav-card" onclick="toast('Opening Nahargarh Fort')"><div class="art" style="background:linear-gradient(160deg,#E0CBA8,#BFA173)"></div><div class="scrim"></div><div class="status" onclick="event.stopPropagation();toggleHeart(this)"><i style="background:#FF6B6B"></i>Saved</div><div class="txt"><h4>Nahargarh Fort</h4><p>6.4 km · Sunset point</p></div></div>
+      <div class="fav-card" onclick="toast('Opening Albert Hall Museum')"><div class="art" style="background:linear-gradient(160deg,#D8C7D0,#B394A5)"></div><div class="scrim"></div><div class="status" onclick="event.stopPropagation();toggleHeart(this)"><i style="background:#FF6B6B"></i>Saved</div><div class="txt"><h4>Albert Hall Museum</h4><p>2.8 km · Museum</p></div></div>
+    </div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#FCD400"></span>09 · Help & Support</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="page" id="help">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="subhead"><div class="ib ib-white" onclick="show('home')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#212121" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ttl">Help &amp; Support</div><div style="width:46px;"></div></div>
+    <div class="helpsearch"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#8A8A8A" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#8A8A8A" stroke-width="2" stroke-linecap="round"/></svg><input placeholder="Search help topics..." onkeydown="if(event.key==='Enter')toast('Searching help...')"></div>
+    <div class="help-tiles">
+      <div class="help-tile bg-y" onclick="toast('Getting Started guide')"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 4h14v16l-7-3-7 3V4z" stroke="#212121" stroke-width="1.8" stroke-linejoin="round"/></svg></div><h4>Getting Started</h4></div>
+      <div class="help-tile bg-l" onclick="toast('Safety Features guide')"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" stroke="#212121" stroke-width="1.8"/></svg></div><h4>Safety Features</h4></div>
+      <div class="help-tile bg-s" onclick="toast('Emergency SOS guide')"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#212121" stroke-width="1.8"/><path d="M12 8v5M12 16v.01" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><h4>Emergency SOS</h4></div>
+      <div class="help-tile bg-c" onclick="toast('Account &amp; Profile guide')"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="#212121" stroke-width="1.8"/><path d="M5 20a7 7 0 0 1 14 0" stroke="#212121" stroke-width="1.8"/></svg></div><h4>Account &amp; Profile</h4></div>
+      <div class="help-tile bg-s" onclick="toast('Report an issue (demo)')"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14H6z" stroke="#212121" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12h6M9 16h4" stroke="#212121" stroke-width="1.8" stroke-linecap="round"/></svg></div><h4>Reporting an Issue</h4></div>
+      <div class="help-tile bg-y" onclick="openThread('support')"><div class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l.9-4.4A8 8 0 1 1 20 12z" stroke="#212121" stroke-width="1.8" stroke-linejoin="round"/></svg></div><h4>Contact Support</h4></div>
+    </div>
+    <div class="section-h"><h2>FAQs</h2><div class="line"></div></div>
+    <div class="faq">
+      <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">How does the SOS button work?<svg class="cv" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="faq-a">Press and hold the SOS button for 3 seconds. It instantly alerts local police, the tourist helpline, and your emergency contacts with your live GPS location.</div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Is my passport data secure?<svg class="cv" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="faq-a">Yes. Your Digital Tourist ID is encrypted and stored securely. Only masked numbers are shown, and full data is shared only with verified authorities.</div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Can I use the app offline?<svg class="cv" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="faq-a">Your Digital ID and saved safe places work offline. SOS requires a network or SMS fallback to reach responders.</div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">How do I add emergency contacts?<svg class="cv" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="faq-a">Go to Profile → Emergency Contacts, or tap the yellow "+" on the Safety Score card on the Home screen.</div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">What is the Safety Score?<svg class="cv" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="faq-a">It's a live 0–100 rating of your surroundings based on crowd density, zone safety, time of day, and recent incident reports nearby. Higher is safer.</div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><div class="faq-q">Which languages are supported?<svg class="cv" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="faq-a">The app and AI assistant support English, Hindi, German, French, Japanese, and Spanish. Change it anytime in Settings → Language.</div></div>
+    </div>
+    <div class="help-banner"><h3>Still need help?</h3><p>Our support team is available 24×7 for travellers.</p><button class="dark-pill" onclick="openThread('support')">Chat with Support</button></div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#F5C86B"></span>10 · About</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="page" id="about">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="subhead"><div class="ib ib-white" onclick="show('home')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#212121" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ttl">About</div><div style="width:46px;"></div></div>
+    <div class="about-logo"><svg width="48" height="48" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" fill="#212121"/><path d="M9 12l2 2 4-4" stroke="#FCFD76" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="about-name">YatriKavach</div>
+    <div class="about-tag">Your Safety Companion Abroad</div>
+    <div class="about-ver">Version 1.0.0</div>
+    <div class="about-row" onclick="toggleAbout(this)"><div class="r1">Our Mission<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><p>To make every foreign traveller feel safe, informed, and connected while exploring India — combining real-time safety intelligence with instant access to help.</p></div>
+    <div class="about-row" onclick="toast('Privacy Policy')"><div class="r1">Privacy Policy<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+    <div class="about-row" onclick="toast('Terms of Service')"><div class="r1">Terms of Service<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+    <div class="about-row" onclick="toast('Data Protection Standards')"><div class="r1">Data Protection<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+    <div class="about-social">
+      <div class="ib ib-white" onclick="toast('Website')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#212121" stroke-width="1.7"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" stroke="#212121" stroke-width="1.4"/></svg></div>
+      <div class="ib ib-white" onclick="toast('Email us')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="#212121" stroke-width="1.7"/><path d="M4 7l8 6 8-6" stroke="#212121" stroke-width="1.7"/></svg></div>
+      <div class="ib ib-white" onclick="toast('Helpline: 1363')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z" stroke="#212121" stroke-width="1.6"/></svg></div>
+    </div>
+    <div class="about-foot">Made for travelers, by travelers · © 2026 YatriKavach</div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#C3D6D6"></span>11 · Settings</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="page" id="settings">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="subhead"><div class="ib ib-white" onclick="show('home')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="#212121" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ttl">Settings</div><div style="width:46px;"></div></div>
+    <div style="height:8px;"></div>
+    <div class="section-h" style="padding:8px 26px 8px;"><h2 style="font-size:15px;color:#6a6a6a;">Preferences</h2><div class="line"></div></div>
+    <div class="about-row" onclick="toast('Notifications: On')"><div class="r1">Notifications<span style="font-size:13px;color:#8A8A8A;font-weight:600;">On ›</span></div></div>
+    <div class="about-row" onclick="toast('Language: English')"><div class="r1">Language<span style="font-size:13px;color:#8A8A8A;font-weight:600;">English ›</span></div></div>
+    <div class="about-row" onclick="toast('Theme: Light (Pastel)')"><div class="r1">App Theme<span style="font-size:13px;color:#8A8A8A;font-weight:600;">Light ›</span></div></div>
+    <div class="section-h" style="padding:14px 26px 8px;"><h2 style="font-size:15px;color:#6a6a6a;">Privacy &amp; Safety</h2><div class="line"></div></div>
+    <div class="about-row" onclick="toast('Location sharing: Always')"><div class="r1">Location Sharing<span style="font-size:13px;color:#8A8A8A;font-weight:600;">Always ›</span></div></div>
+    <div class="about-row" onclick="toast('Biometric lock: Enabled')"><div class="r1">Biometric Lock<span style="font-size:13px;color:#8A8A8A;font-weight:600;">On ›</span></div></div>
+    <div class="about-row" onclick="show('profile')"><div class="r1">Emergency Contacts<span style="font-size:13px;color:#8A8A8A;font-weight:600;">2 saved ›</span></div></div>
+    <div class="about-row" onclick="toast('Auto check-in: Every 6 hours')"><div class="r1">Auto Check-in<span style="font-size:13px;color:#8A8A8A;font-weight:600;">6 hrs ›</span></div></div>
+    <div class="section-h" style="padding:14px 26px 8px;"><h2 style="font-size:15px;color:#6a6a6a;">Data</h2><div class="line"></div></div>
+    <div class="about-row" onclick="toast('Storage: 48 MB used')"><div class="r1">Data &amp; Storage<span style="font-size:13px;color:#8A8A8A;font-weight:600;">48 MB ›</span></div></div>
+    <div class="about-row" onclick="toast('Offline maps: Downloaded')"><div class="r1">Offline Maps<span style="font-size:13px;color:#8A8A8A;font-weight:600;">Jaipur ›</span></div></div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#212121"></span>12 · Navigation Drawer</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="drawer" id="drawer">
+    <div class="prof"><div class="av">A</div><div><h3>Alex Morgan</h3><p>Tourist Visa · Valid till 12 Dec 2026</p></div><div class="ib ib-white" style="width:38px;height:38px;" onclick="show('profile');closeDrawer()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 20l1-4L16 5l3 3L8 19l-4 1z" stroke="#212121" stroke-width="1.8" stroke-linejoin="round"/></svg></div></div>
+    <div class="menu">
+      <div class="mrow" onclick="show('profile');closeDrawer()"><div class="mi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="#212121" stroke-width="1.8"/><path d="M5 20a7 7 0 0 1 14 0" stroke="#212121" stroke-width="1.8"/></svg></div><span>Profile Details</span><div class="ib-arrow" style="width:34px;height:34px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div></div>
+      <div class="mrow" onclick="show('favourites');closeDrawer()"><div class="mi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" stroke="#212121" stroke-width="1.8"/></svg></div><span>Favourite Places</span><div class="ib-arrow" style="width:34px;height:34px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div></div>
+      <div class="mrow" onclick="show('help');closeDrawer()"><div class="mi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#212121" stroke-width="1.8"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4 2c0 1.5-2 1.8-2 3M12 17v.01" stroke="#212121" stroke-width="1.8" stroke-linecap="round"/></svg></div><span>Help Section</span><div class="ib-arrow" style="width:34px;height:34px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div></div>
+      <div class="mrow" onclick="show('about');closeDrawer()"><div class="mi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#212121" stroke-width="1.8"/><path d="M12 11v5M12 8v.01" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><span>About YatriKavach</span><div class="ib-arrow" style="width:34px;height:34px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div></div>
+      <div class="mrow" onclick="show('settings');closeDrawer()"><div class="mi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#212121" stroke-width="1.8"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2 2M16.4 16.4l2 2M18.4 5.6l-2 2M7.6 16.4l-2 2" stroke="#212121" stroke-width="1.6" stroke-linecap="round"/></svg></div><span>Settings</span><div class="ib-arrow" style="width:34px;height:34px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg></div></div>
+      <div class="mrow danger" onclick="logout()"><div class="mi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 12H5m0 0l4-4m-4 4l4 4M13 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4" stroke="#d64b4b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>Log Out</span></div>
+    </div>
+    <div class="ver">YatriKavach v1.0</div>
+  </div></div></div></div></div></div></div>
+<div class="section"><div class="section-head"><span class="tag">EMERGENCY</span><span class="ct">1 screen</span><span class="ln"></span></div><div class="frames"><div class="frame"><div class="cap"><span class="dot" style="background:#FF6B6B"></span>13 · Emergency SOS</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="sos-screen" id="sos">
+    <div class="sos-top"><div class="ib ib-white" onclick="closeSOS()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#212121" stroke-width="2.2" stroke-linecap="round"/></svg></div><div style="width:46px;"></div></div>
+    <div class="sos-hd"><h2 id="sosTitle">EMERGENCY SOS</h2><p id="sosSub">Press &amp; hold to alert tourist police, your embassy &amp; trusted contacts with your live location.</p></div>
+    <div class="sos-stage">
+      <div class="sos-ring"></div><div class="sos-ring b"></div>
+      <div class="sos-circle" id="sosCircle"><div><div class="cnum" id="sosNum"><svg width="46" height="46" viewBox="0 0 24 24" fill="none"><path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z" fill="#fff"/></svg></div><div class="clabel" id="sosLabel">HOLD TO ALERT</div></div></div>
+    </div>
+    <div class="notify-card">
+      <h4>NOTIFYING</h4>
+      <div class="nrow" id="n-police"><div class="nic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" stroke="#c0392b" stroke-width="1.8"/></svg></div><div class="ni"><h5>Local Police (100)</h5><p>Nearest unit · 1.2 km</p></div><div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="nrow" id="n-helpline"><div class="nic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z" stroke="#c0392b" stroke-width="1.6"/></svg></div><div class="ni"><h5>Tourist Helpline (1363)</h5><p>National · 24×7</p></div><div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="nrow" id="n-sarah"><div class="nic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="#c0392b" stroke-width="1.8"/><path d="M5 20a7 7 0 0 1 14 0" stroke="#c0392b" stroke-width="1.8"/></svg></div><div class="ni"><h5>Emergency Contact · Sarah</h5><p>Sister · +49 176 555 0132</p></div><div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+    </div>
+    <div class="map-thumb"><div style="position:absolute;inset:0;background:radial-gradient(circle at 40% 40%,#E7ECE4,#D3E0DF);"></div><div class="mgrid"></div><div class="me-dot" style="left:50%;top:50%;"><div class="halo"></div><div class="c" style="background:#FF6B6B;"></div></div></div>
+    <button class="cancel-btn" onclick="closeSOS()">Cancel Alert</button>
+  </div></div></div></div></div></div></div>
+<div class="section"><div class="section-head"><span class="tag">ADMIN CONSOLE</span><span class="ct">5 screens</span><span class="ln"></span></div><div class="frames"><div class="frame"><div class="cap"><span class="dot" style="background:#212121"></span>A0 · Admin Sidebar</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="a-sidebar" id="a-sidebar">
+    <div class="sb-logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" fill="#212121"/><path d="M9 12l2 2 4-4" stroke="#FCFD76" stroke-width="2" stroke-linecap="round"/></svg>YatriKavach</div>
+    <div class="srow on" data-a="a-dashboard" onclick="adminGo('a-dashboard')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" stroke="#212121" stroke-width="1.8"/><rect x="13" y="3" width="8" height="5" rx="2" stroke="#212121" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="#212121" stroke-width="1.8"/><rect x="13" y="10" width="8" height="11" rx="2" stroke="#212121" stroke-width="1.8"/></svg>Dashboard</div>
+    <div class="srow" data-a="a-tracking" onclick="adminGo('a-tracking')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.2-7-11a7 7 0 1 1 14 0c0 5.8-7 11-7 11z" stroke="#212121" stroke-width="1.8"/><circle cx="12" cy="10" r="2.4" stroke="#212121" stroke-width="1.8"/></svg>Tourist Tracking</div>
+    <div class="srow" data-a="a-alerts" onclick="adminGo('a-alerts')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3L12 3z" stroke="#212121" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 9v4" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg>Alerts &amp; SOS Log</div>
+    <div class="srow" data-a="a-reports" onclick="adminGo('a-reports')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 20V10M12 20V4M19 20v-7" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg>Reports &amp; Analytics</div>
+    <div class="srow" data-a="zones" onclick="toast('Zone Management (demo)');closeSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 8l8-4 8 4v8l-8 4-8-4V8z" stroke="#212121" stroke-width="1.7" stroke-linejoin="round"/></svg>Zone Management</div>
+    <div class="srow" data-a="chats" onclick="toast('Support Chats (demo)');closeSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l.9-4.4A8 8 0 1 1 20 12z" stroke="#212121" stroke-width="1.8" stroke-linejoin="round"/></svg>Support Chats</div>
+    <div class="srow" onclick="toast('Settings (demo)');closeSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#212121" stroke-width="1.8"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#212121" stroke-width="1.6" stroke-linecap="round"/></svg>Settings</div>
+    <div class="srow" style="color:#d64b4b;margin-top:8px;" onclick="logout()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 12H5m0 0l4-4m-4 4l4 4M13 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4" stroke="#d64b4b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Log Out</div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#D7D7F4"></span>A1 · Admin Dashboard</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="apage active" id="a-dashboard">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="a-top"><div style="display:flex;align-items:center;gap:12px;"><div class="ib ib-white" onclick="openSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="a-title">Admin Dashboard</div></div><div style="display:flex;align-items:center;gap:10px;"><div class="ib ib-white sos-btn" style="background:var(--white);box-shadow:var(--shadow-sm);" onclick="toast('2 unread notifications')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9z" stroke="#212121" stroke-width="1.8"/></svg></div><div class="a-avatar">AD</div></div></div>
+    <div class="kpi-grid">
+      <div class="kpi bg-l"><div class="kt"><div class="ib" style="width:34px;height:34px;background:rgba(255,255,255,.5);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3" stroke="#212121" stroke-width="1.8"/><path d="M5 20a7 7 0 0 1 14 0" stroke="#212121" stroke-width="1.8"/></svg></div><div class="ib-arrow" style="width:30px;height:30px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="big">1,284</div><div class="lbl">Active Tourists</div><div class="trend"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M4 20L20 4M20 4h-9M20 4v9" stroke="#2e7d4f" stroke-width="2.4" stroke-linecap="round"/></svg>+8% today</div></div>
+      <div class="kpi" style="background:var(--coral-tint)"><div class="kt"><div class="ib" style="width:34px;height:34px;background:rgba(255,255,255,.55);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3L12 3z" stroke="#c0392b" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 9v4" stroke="#c0392b" stroke-width="2" stroke-linecap="round"/></svg></div><div class="ib-arrow" style="width:30px;height:30px;background:#c0392b;" onclick="adminGo('a-alerts')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="big" style="color:#c0392b;">2</div><div class="lbl">Active SOS Alerts</div><div class="trend" style="color:#c0392b;">needs response</div></div>
+      <div class="kpi bg-s"><div class="kt"><div class="ib" style="width:34px;height:34px;background:rgba(255,255,255,.5);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2l7 3v6c0 4.5-3 8-7 11-4-3-7-6.5-7-11V5l7-3z" stroke="#212121" stroke-width="1.7"/></svg></div><div class="ib-arrow" style="width:30px;height:30px;" onclick="adminGo('a-zones')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="big">47</div><div class="lbl">Safe Zones</div><div class="trend">+3 this week</div></div>
+      <div class="kpi bg-y"><div class="kt"><div class="ib" style="width:34px;height:34px;background:rgba(255,255,255,.5);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#212121" stroke-width="1.7"/><path d="M12 7v5l3 2" stroke="#212121" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="ib-arrow" style="width:30px;height:30px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="big">4.2<span style="font-size:15px;">min</span></div><div class="lbl">Avg Response</div><div class="trend"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M4 4v9M4 4h9" stroke="#2e7d4f" stroke-width="2.4" stroke-linecap="round"/></svg>-0.6 min</div></div>
+    </div>
+    <div class="a-map">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 40% 40%,#E7ECE4,#D3E0DF);"></div><div class="mgrid"></div>
+      <div class="mpin" style="left:30%;top:40%;"><div class="badge" style="width:16px;height:16px;background:#8FC3AE;"></div></div>
+      <div class="mpin" style="left:52%;top:56%;"><div class="badge" style="width:16px;height:16px;background:#FCFD76;"></div></div>
+      <div class="mpin" style="left:64%;top:34%;"><div class="badge" style="width:18px;height:18px;background:#FF6B6B;box-shadow:0 0 0 5px rgba(255,107,107,.25);animation:pdot 1.6s infinite;"></div></div>
+      <div class="mpin" style="left:44%;top:70%;"><div class="badge" style="width:18px;height:18px;background:#FF6B6B;box-shadow:0 0 0 5px rgba(255,107,107,.25);animation:pdot 1.6s infinite;"></div></div>
+      <div class="mpin" style="left:22%;top:64%;"><div class="badge" style="width:16px;height:16px;background:#8FC3AE;"></div></div>
+    </div>
+    <div class="a-legend"><span><i style="background:#8FC3AE"></i>Safe</span><span><i style="background:#FCFD76"></i>Caution</span><span><i style="background:#FF6B6B"></i>Alert</span></div>
+    <div class="section-h"><h2 style="font-size:20px;">Recent Alerts</h2><div class="line"></div></div>
+    <div class="alertrow active-edge" onclick="adminGo('a-alerts')"><div class="aic" style="background:var(--coral-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3L12 3z" stroke="#c0392b" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div class="ainfo"><h4>Emma Müller · SOS</h4><p>Chandni Chowk · 2 min ago</p></div><span class="sbadge sb-active">Active</span></div>
+    <div class="alertrow active-edge" onclick="adminGo('a-alerts')"><div class="aic" style="background:var(--coral-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3L12 3z" stroke="#c0392b" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div class="ainfo"><h4>Tom Becker · SOS</h4><p>Amber Fort Rd · 6 min ago</p></div><span class="sbadge sb-active">Active</span></div>
+    <div class="alertrow" onclick="adminGo('a-alerts')"><div class="aic" style="background:var(--yellow-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16v.01" stroke="#8a7a00" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#8a7a00" stroke-width="1.6"/></svg></div><div class="ainfo"><h4>Yuki Tanaka · Zone Breach</h4><p>Restricted area · 20 min ago</p></div><span class="sbadge sb-prog">In Progress</span></div>
+    <div class="alertrow" onclick="adminGo('a-alerts')"><div class="aic" style="background:var(--sage-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#3c7060" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ainfo"><h4>Marco Rossi · Missed Check-in</h4><p>Resolved · 1 h ago</p></div><span class="sbadge sb-res">Resolved</span></div>
+    <div class="section-h"><h2 style="font-size:20px;">Quick Actions</h2><div class="line"></div></div>
+    <div class="qa">
+      <div class="q bg-y" onclick="toast('Broadcast alert sent')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 10v4l6 3V7l-6 3zM10 8l8-4v16l-8-4" stroke="#212121" stroke-width="1.7" stroke-linejoin="round"/></svg>Broadcast</div>
+      <div class="q bg-s" onclick="toast('Add safe zone (demo)')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#212121" stroke-width="2.2" stroke-linecap="round"/></svg>Add Zone</div>
+      <div class="q bg-l" onclick="toast('Report exported')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 3v11m0 0l-4-4m4 4l4-4M5 21h14" stroke="#212121" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Export</div>
+      <div class="q bg-c" onclick="toast('Contacting authorities')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z" stroke="#212121" stroke-width="1.6"/></svg>Authorities</div>
+    </div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#C3D6D6"></span>A2 · Tourist Tracking</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="apage" id="a-tracking">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="a-top"><div style="display:flex;align-items:center;gap:12px;"><div class="ib ib-white" onclick="openSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="a-title">Tourist Tracking</div></div><div class="a-avatar">AD</div></div>
+    <div class="helpsearch" style="margin:14px 22px 0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#8A8A8A" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="#8A8A8A" stroke-width="2" stroke-linecap="round"/></svg><input placeholder="Search by name, passport ID..." onkeydown="if(event.key==='Enter')toast('Searching tourists...')"></div>
+    <div class="a-chip-row"><div class="chip on" onclick="pickChip(this)">All</div><div class="chip" onclick="pickChip(this)">Active</div><div class="chip" onclick="pickChip(this)">SOS</div><div class="chip" onclick="pickChip(this)">Offline</div></div>
+    <div class="a-map" style="margin-top:14px;">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 40% 40%,#E7ECE4,#D3E0DF);"></div><div class="mgrid"></div>
+      <div class="mpin" style="left:30%;top:44%;"><div class="badge" style="width:15px;height:15px;background:#8FC3AE;"></div></div>
+      <div class="mpin" style="left:58%;top:36%;"><div class="badge" style="width:15px;height:15px;background:#FCFD76;"></div></div>
+      <div class="mpin" style="left:48%;top:62%;"><div class="badge" style="width:17px;height:17px;background:#FF6B6B;animation:pdot 1.6s infinite;"></div></div>
+    </div>
+    <div class="trow" onclick="toast('Emma Müller · viewing profile')"><div class="tav" style="background:#FF6B6B">EM</div><div class="ti"><h4>Emma Müller <span style="font-size:12px;">🇩🇪</span></h4><p>Chandni Chowk · SOS active</p></div><div class="dot-st" style="background:#FF6B6B"></div></div>
+    <div class="trow" onclick="toast('Yuki Tanaka · viewing profile')"><div class="tav" style="background:#FCB74B">YT</div><div class="ti"><h4>Yuki Tanaka <span style="font-size:12px;">🇯🇵</span></h4><p>Hawa Mahal · Caution zone</p></div><div class="dot-st" style="background:#FCD34B"></div></div>
+    <div class="trow" onclick="toast('Marco Rossi · viewing profile')"><div class="tav" style="background:#8FC3AE">MR</div><div class="ti"><h4>Marco Rossi <span style="font-size:12px;">🇮🇹</span></h4><p>City Palace · Checked in 5m ago</p></div><div class="dot-st" style="background:#8FC3AE"></div></div>
+    <div class="trow" onclick="toast('Sophie Dubois · viewing profile')"><div class="tav" style="background:#8f7fd6">SD</div><div class="ti"><h4>Sophie Dubois <span style="font-size:12px;">🇫🇷</span></h4><p>Amber Fort · Safe</p></div><div class="dot-st" style="background:#8FC3AE"></div></div>
+    <div class="trow" onclick="toast('Tom Becker · viewing profile')"><div class="tav" style="background:#FF6B6B">TB</div><div class="ti"><h4>Tom Becker <span style="font-size:12px;">🇩🇪</span></h4><p>Amber Fort Rd · SOS active</p></div><div class="dot-st" style="background:#FF6B6B"></div></div>
+    <div class="trow" onclick="toast('Olivia Smith · viewing profile')"><div class="tav" style="background:#8FC3AE">OS</div><div class="ti"><h4>Olivia Smith <span style="font-size:12px;">🇬🇧</span></h4><p>Jantar Mantar · Checked in 12m ago</p></div><div class="dot-st" style="background:#8FC3AE"></div></div>
+    <div class="trow" onclick="toast('Carlos Gomez · viewing profile')"><div class="tav" style="background:#bcbcbc">CG</div><div class="ti"><h4>Carlos Gomez <span style="font-size:12px;">🇪🇸</span></h4><p>Last seen 3h ago · Offline</p></div><div class="dot-st" style="background:#bcbcbc"></div></div>
+    <div class="trow" onclick="toast('Mei Lin · viewing profile')"><div class="tav" style="background:#8FC3AE">ML</div><div class="ti"><h4>Mei Lin <span style="font-size:12px;">🇸🇬</span></h4><p>Nahargarh Fort · Safe</p></div><div class="dot-st" style="background:#8FC3AE"></div></div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#FF6B6B"></span>A3 · Alerts & SOS Log</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="apage" id="a-alerts">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="a-top"><div style="display:flex;align-items:center;gap:12px;"><div class="ib ib-white" onclick="openSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="a-title">Alerts &amp; SOS Log</div></div><div class="a-avatar">AD</div></div>
+    <div class="summary-strip">
+      <div class="sstat" style="background:var(--coral-tint)"><div class="b" style="color:#c0392b">2</div><div class="l">Active Today</div></div>
+      <div class="sstat bg-y"><div class="b">14</div><div class="l">This Week</div></div>
+      <div class="sstat bg-s"><div class="b">6.5m</div><div class="l">Avg Resolve</div></div>
+    </div>
+    <div class="alertrow active-edge" onclick="toggleStepper('step1')"><div class="aic" style="background:var(--coral-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3L12 3z" stroke="#c0392b" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div class="ainfo"><h4>Emma Müller · SOS Triggered</h4><p>Chandni Chowk · 2 min ago</p></div><span class="sbadge sb-active">Active</span></div>
+    <div class="stepper" id="step1">
+      <div class="step"><div class="sd" style="background:#c0392b"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></div><div class="stx"><h5>Alert Triggered</h5><p>2 min ago · GPS + audio captured</p></div></div>
+      <div class="step"><div class="sd" style="background:#c0392b"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></div><div class="stx"><h5>Authorities Notified</h5><p>1 min ago · Police unit 12</p></div></div>
+      <div class="step"><div class="sd" style="background:var(--yellow);"></div><div class="stx"><h5>Response Dispatched</h5><p>In progress · ETA 3 min</p></div></div>
+      <div class="step"><div class="sd" style="background:#e5e2da;"></div><div class="stx"><h5>Resolved</h5><p>Pending</p></div></div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px;">
+        <button class="dark-pill" style="background:var(--sage);color:#212121;padding:12px 18px;font-size:13px;" onclick="toast('Marked resolved ✓')">Mark Resolved</button>
+        <button class="dark-pill" style="background:var(--coral);padding:12px 18px;font-size:13px;" onclick="toast('Escalated to senior officer')">Escalate</button>
+        <button class="dark-pill" style="padding:12px 18px;font-size:13px;" onclick="toast('Calling tourist...')">Contact Tourist</button>
+      </div>
+    </div>
+    <div class="alertrow active-edge" onclick="toggleStepper('step2')"><div class="aic" style="background:var(--coral-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3l9 16H3L12 3z" stroke="#c0392b" stroke-width="1.8" stroke-linejoin="round"/></svg></div><div class="ainfo"><h4>Tom Becker · SOS Triggered</h4><p>Amber Fort Rd · 6 min ago</p></div><span class="sbadge sb-active">Active</span></div>
+    <div class="stepper" id="step2">
+      <div class="step"><div class="sd" style="background:#c0392b"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></div><div class="stx"><h5>Alert Triggered</h5><p>6 min ago</p></div></div>
+      <div class="step"><div class="sd" style="background:var(--yellow);"></div><div class="stx"><h5>Authorities Notified</h5><p>Dispatching...</p></div></div>
+      <div class="step"><div class="sd" style="background:#e5e2da;"></div><div class="stx"><h5>Resolved</h5><p>Pending</p></div></div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px;"><button class="dark-pill" style="background:var(--coral);padding:12px 18px;font-size:13px;" onclick="toast('Escalated')">Escalate</button><button class="dark-pill" style="padding:12px 18px;font-size:13px;" onclick="toast('Calling local police...')">Contact Police</button></div>
+    </div>
+    <div class="alertrow" onclick="toast('Yuki Tanaka · Zone breach detail')"><div class="aic" style="background:var(--yellow-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 8v5M12 16v.01" stroke="#8a7a00" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="9" stroke="#8a7a00" stroke-width="1.6"/></svg></div><div class="ainfo"><h4>Yuki Tanaka · Zone Breach</h4><p>Restricted area · 20 min ago</p></div><span class="sbadge sb-prog">In Progress</span></div>
+    <div class="alertrow" onclick="toast('Marco Rossi · resolved detail')"><div class="aic" style="background:var(--sage-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#3c7060" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ainfo"><h4>Marco Rossi · Missed Check-in</h4><p>Resolved · 1 h ago</p></div><span class="sbadge sb-res">Resolved</span></div>
+    <div class="alertrow" onclick="toast('Sophie Dubois · resolved detail')"><div class="aic" style="background:var(--sage-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#3c7060" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ainfo"><h4>Sophie Dubois · Medical</h4><p>Resolved · 2 h ago · Pharmacy located</p></div><span class="sbadge sb-res">Resolved</span></div>
+    <div class="alertrow" onclick="toast('Olivia Smith · resolved detail')"><div class="aic" style="background:var(--sage-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#3c7060" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ainfo"><h4>Olivia Smith · Zone Breach</h4><p>Resolved · 4 h ago · Escorted out</p></div><span class="sbadge sb-res">Resolved</span></div>
+    <div class="alertrow" onclick="toast('Mei Lin · resolved detail')"><div class="aic" style="background:var(--sage-tint)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#3c7060" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ainfo"><h4>Mei Lin · Missed Check-in</h4><p>Resolved · yesterday</p></div><span class="sbadge sb-res">Resolved</span></div>
+  </div></div></div></div></div><div class="frame"><div class="cap"><span class="dot" style="background:#FCD400"></span>A4 · Reports & Analytics</div>
+<div class="phone-mini"><div class="vp"><div class="notch"></div><div class="inner"><div class="apage" id="a-reports">
+    <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45"/><rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121"/><rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121"/></svg></span></div>
+    <div class="a-top"><div style="display:flex;align-items:center;gap:12px;"><div class="ib ib-white" onclick="openSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div><div class="a-title">Reports</div></div><div class="daterange" onclick="toast('Range: Last 30 Days')">Last 30 Days<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+    <div class="rchart bg-s">
+      <div class="top" style="display:flex;justify-content:space-between;align-items:center;"><h3 style="font-size:18px;font-weight:700;">SOS Alerts Over Time</h3><div class="ib-arrow" style="width:32px;height:32px;" onclick="toast('Expanded chart')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+      <div class="bars" style="margin-top:16px;">
+        <div class="bar"><div class="col"><div class="cap" style="height:16px"></div><div class="fill" style="height:48px"></div><div class="base hatch"></div></div><label>W1</label></div>
+        <div class="bar"><div class="col"><div class="cap" style="height:22px"></div><div class="fill" style="height:66px"></div><div class="base hatch"></div></div><label>W2</label></div>
+        <div class="bar"><div class="col rounded"><div class="fill" style="height:40px"></div><div class="base hatch"></div></div><label>W3</label></div>
+        <div class="bar"><div class="col"><div class="cap" style="height:18px"></div><div class="fill" style="height:74px"></div><div class="base hatch"></div></div><label>W4</label></div>
+        <div class="bar"><div class="col"><div class="cap" style="height:14px"></div><div class="fill" style="height:56px"></div><div class="base hatch"></div></div><label>W5</label></div>
+      </div>
+    </div>
+    <div class="rchart" style="background:var(--cream);">
+      <h3 style="font-size:18px;font-weight:700;">Alert Types Breakdown</h3>
+      <div class="donut-lg">
+        <svg width="150" height="150" viewBox="0 0 150 150">
+          <circle cx="75" cy="75" r="58" fill="none" stroke="#FCFD76" stroke-width="18" stroke-dasharray="146 218" transform="rotate(-90 75 75)" stroke-linecap="round"/>
+          <circle cx="75" cy="75" r="58" fill="none" stroke="#C3D6D6" stroke-width="18" stroke-dasharray="90 274" stroke-dashoffset="-150" transform="rotate(-90 75 75)" stroke-linecap="round"/>
+          <circle cx="75" cy="75" r="58" fill="none" stroke="#D7D7F4" stroke-width="18" stroke-dasharray="55 309" stroke-dashoffset="-244" transform="rotate(-90 75 75)" stroke-linecap="round"/>
+        </svg>
+        <div class="ctr">128<div style="font-size:11px;font-weight:600;color:#8A8A8A;text-align:center;margin-top:-2px;">total</div></div>
+      </div>
+      <div class="dlegend">
+        <div class="dl"><i style="background:#FCFD76"></i>SOS Alerts<b>58</b></div>
+        <div class="dl"><i style="background:#C3D6D6"></i>Zone Breach<b>36</b></div>
+        <div class="dl"><i style="background:#D7D7F4"></i>Missed Check-in<b>22</b></div>
+        <div class="dl"><i class="hatch"></i>Medical<b>12</b></div>
+      </div>
+    </div>
+    <div class="kpi-grid" style="padding:14px 22px 0;">
+      <div class="kpi bg-l"><div class="lbl">Team A · Response</div><div class="big" style="font-size:22px;">3.8m</div><div class="trend"><svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M4 4v9M4 4h9" stroke="#2e7d4f" stroke-width="2.4" stroke-linecap="round"/></svg>fastest</div></div>
+      <div class="kpi bg-y"><div class="lbl">Team B · Response</div><div class="big" style="font-size:22px;">5.1m</div><div class="trend" style="color:#8a7a00;">steady</div></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 22px 0;padding:14px 18px;background:var(--white);border-radius:20px;box-shadow:var(--shadow-sm);">
+      <span style="font-size:14.5px;font-weight:600;">Schedule Automated Report</span>
+      <div class="tgl" id="reportToggle" onclick="toggleSwitch(this)" style="width:48px;height:28px;border-radius:999px;background:#ddd;position:relative;cursor:pointer;transition:.2s;"><div style="position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 2px 5px rgba(0,0,0,.2);"></div></div>
+    </div>
+    <button class="save-btn" style="width:calc(100% - 44px);background:var(--ink);" onclick="toast('Report exported as PDF')">Export Report</button>
+  </div></div></div></div></div></div></div>
+<div class="foot">YatriKavach · 18 frames · pastel flat design system · © 2026</div></body></html>
