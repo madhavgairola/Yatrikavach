@@ -571,59 +571,58 @@
                   <rect x="5" y="4.5" width="3" height="7.5" rx="1" />
                   <rect x="10" y="2" width="3" height="10" rx="1" />
                   <rect x="15" y="0" width="3" height="12" rx="1" />
-                </svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none">
-                  <rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45" />
-                  <rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121" />
-                  <rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121" />
-                </svg></span></div>
-            <div class="topbar">
-              <div class="ib ib-white" onclick="show('home')"><svg width="18" height="18" viewBox="0 0 24 24"
-                  fill="none">
-                  <path d="M15 5l-7 7 7 7" stroke="#212121" stroke-width="2.2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg></div>
-              <div class="wordmark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 3l1.8 4.9L18.7 9l-4.9 1.8L12 15.7l-1.8-4.9L5.3 9l4.9-1.2L12 3z" stroke="#212121"
-                    stroke-width="1.7" stroke-linejoin="round" />
-                </svg>YatriKavach AI</div>
-              <div class="ib ib-white" onclick="toast('Clear chat · New topic')"><svg width="20" height="20"
-                  viewBox="0 0 24 24" fill="#212121">
-                  <circle cx="5" cy="12" r="2" />
-                  <circle cx="12" cy="12" r="2" />
-                  <circle cx="19" cy="12" r="2" />
-                </svg></div>
-            </div>
-            <div class="chat-scroll" id="chatScroll" style="padding-bottom:150px;">
-              <div class="msg bot-wrap">
-                <div class="bav"><svg width="17" height="17" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 3l1.8 4.9L18.7 9l-4.9 1.8L12 15.7l-1.8-4.9L5.3 9l4.9-1.2L12 3z" stroke="#212121"
-                      stroke-width="1.6" stroke-linejoin="round" />
+              <div class="statusbar sb-dark"><span class="t">9:41</span><span class="r"><svg width="18" height="12"
+                    viewBox="0 0 18 12">
+                    <rect x="0" y="7" width="3" height="5" rx="1" />
+                    <rect x="5" y="4.5" width="3" height="7.5" rx="1" />
+                    <rect x="10" y="2" width="3" height="10" rx="1" />
+                    <rect x="15" y="0" width="3" height="12" rx="1" />
+                  </svg><svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+                    <rect x="1" y="1" width="20" height="10" rx="3" stroke="#212121" opacity=".45" />
+                    <rect x="3" y="3" width="15" height="6" rx="1.5" fill="#212121" />
+                    <rect x="22.5" y="4" width="2" height="4" rx="1" fill="#212121" />
+                  </svg></span></div>
+              <div class="topbar">
+                <div class="ib ib-white" onclick="show('home')"><svg width="18" height="18" viewBox="0 0 24 24"
+                    fill="none">
+                    <path d="M15 5l-7 7 7 7" stroke="#212121" stroke-width="2.2" stroke-linecap="round"
+                      stroke-linejoin="round" />
                   </svg></div>
-                <div class="msg bot">Hi there! I'm your safety assistant. Ask me about local laws, emergency numbers, or
-                  safe areas nearby.</div>
+                <div class="wordmark">🛡️ Tourist Safety Assistant</div>
+                <div class="ib ib-white" onclick="toast('Clear chat & New topic')"><svg width="20" height="20"
+                    viewBox="0 0 24 24" fill="#212121">
+                    <circle cx="5" cy="12" r="2" />
+                    <circle cx="12" cy="12" r="2" />
+                    <circle cx="19" cy="12" r="2" />
+                  </svg></div>
               </div>
-            </div>
-            <div class="suggest" style="position:absolute;bottom:82px;left:0;right:0;">
-              <div class="s" onclick="quickAsk('Nearest hospital?')">Nearest Hospital</div>
-              <div class="s" onclick="quickAsk('Translate a phrase')">Translate Phrase</div>
-              <div class="s" onclick="quickAsk('Local laws')">Local Laws</div>
-              <div class="s" onclick="quickAsk('Emergency numbers')">Emergency Numbers</div>
-              <div class="s" onclick="quickAsk('Is the water safe to drink?')">Safe Water?</div>
-              <div class="s" onclick="quickAsk('How much should a taxi cost?')">Taxi Fares</div>
-              <div class="s" onclick="quickAsk('What is the weather today?')">Weather</div>
-            </div>
-            <div class="inputbar">
-              <input id="chatInput" placeholder="Ask YatriKavach AI..." onkeydown="if(event.key==='Enter')sendChat()">
-              <div class="ib ib-white" style="width:40px;height:40px;" onclick="toast('Listening... (demo)')"><svg
-                  width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <rect x="9" y="3" width="6" height="11" rx="3" stroke="#212121" stroke-width="1.8" />
-                  <path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="#212121" stroke-width="1.8" stroke-linecap="round" />
-                </svg></div>
-              <div class="ib-arrow" style="width:44px;height:44px;" onclick="sendChat()"><svg width="18" height="18"
-                  viewBox="0 0 24 24" fill="none">
-                  <path d="M4 12h15M13 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg></div>
+              <div class="chat-scroll" id="chatScroll" style="padding-bottom:150px;">
+                <div class="msg bot-wrap">
+                  <div class="bav">🛡️</div>
+                  <div class="msg bot">Good afternoon. You're in Shillong.<br><br>How can I help?</div>
+                </div>
+              </div>
+              <div class="suggest" style="position:absolute;bottom:82px;left:0;right:0;">
+                <div class="s" style="color:red; border-color:red;" onclick="quickAsk('🚨 Emergency')">🚨 Emergency</div>
+                <div class="s" onclick="quickAsk('📍 I\'m lost')">📍 I'm lost</div>
+                <div class="s" onclick="quickAsk('📝 Report incident')">📝 Report incident</div>
+                <div class="s" onclick="quickAsk('🏥 Find medical help')">🏥 Find medical help</div>
+              </div>
+              <div class="inputbar">
+                <input id="chatInput" placeholder="🎙️ Ask me anything..." 
+onkeydown="if(event.key==='Enter')sendChat()">
+                <div class="ib ib-white" style="width:40px;height:40px;" onclick="toast('Listening... (demo)')"><svg
+                    width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <rect x="9" y="3" width="6" height="11" rx="3" stroke="#212121" stroke-width="1.8" />
+                    <path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="#212121" stroke-width="1.8" stroke-linecap="round" 
+/>
+                  </svg></div>
+                <div class="ib-arrow" style="width:44px;height:44px;" onclick="sendChat()"><svg width="18" height="18"
+                    viewBox="0 0 24 24" fill="none">
+                    <path d="M4 12h15M13 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg></div>
+              </div>
             </div>
           </div>
 
