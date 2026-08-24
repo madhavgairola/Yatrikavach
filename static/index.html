@@ -4731,6 +4731,494 @@
       toast(on ? 'Auto-report off' : 'Auto-report scheduled');
     }
   </script>
+  <script>
+    /* =========================================================
+       YATRIKAVACH AUTH BRIDGE
+       This makes authentication functions globally accessible.
+       ========================================================= */
+
+    (function () {
+
+      let authClient = null;
+
+      async function getAuthClient() {
+
+        if (authClient) {
+          return authClient;
+        }
+
+        if (!window.supabase) {
+          throw new Error(
+            "Supabase JavaScript library is not loaded."
+          );
+        }
+
+        const response = await fetch("/api/config");
+
+        if (!response.ok) {
+          throw new Error(
+            "Could not load Supabase configuration."
+          );
+        }
+
+        const config = await response.json();
+
+        if (
+          !config.supabaseUrl ||
+          !config.supabaseAnonKey
+        ) {
+          throw new Error(
+            "Supabase URL or anon key is missing."
+          );
+        }
+
+        authClient = window.supabase.createClient(
+          config.supabaseUrl,
+          config.supabaseAnonKey
+        );
+
+        return authClient;
+      }
+
+
+      function getLoginInputs() {
+
+        const form =
+          document.getElementById("loginform");
+
+        if (!form) {
+          throw new Error(
+            "Login form not found."
+          );
+        }
+
+        const emailInput =
+          form.querySelector(
+            'input[type="email"]'
+          );
+
+        const passwordInput =
+          form.querySelector(
+            'input[type="password"]'
+          );
+
+        return {
+          emailInput,
+          passwordInput
+        };
+      }
+
+
+      /* =====================================================
+         EMAIL SIGN UP
+         ===================================================== */
+
+      window.signUp = async function () {
+
+        try {
+
+          const supabase =
+            await getAuthClient();
+
+          const {
+            emailInput,
+            passwordInput
+          } = getLoginInputs();
+
+          const email =
+            emailInput?.value
+              ?.trim();
+
+          const password =
+            passwordInput?.value || "";
+
+
+          if (!email) {
+            toast("Enter your email.");
+            return;
+          }
+
+
+          if (!password) {
+            toast("Enter a password.");
+            return;
+          }
+
+
+          if (password.length < 6) {
+            toast(
+              "Password must be at least 6 characters."
+            );
+            return;
+          }
+
+
+          toast(
+            "Creating your account..."
+          );
+
+
+          const fullName =
+            email.split("@")[0];
+
+
+          const {
+            data,
+            error
+          } = await supabase.auth.signUp({
+
+            email: email,
+
+            password: password,
+
+            options: {
+              data: {
+                full_name: fullName
+              }
+            }
+
+          });
+
+
+          if (error) {
+
+            console.error(
+              "SIGNUP ERROR:",
+              error
+            );
+
+            toast(
+              error.message
+            );
+
+            return;
+          }
+
+
+          console.log(
+            "SIGNUP SUCCESS:",
+            data
+          );
+
+
+          if (data.session) {
+
+            toast(
+              "Account created successfully!"
+            );
+
+            setTimeout(
+              () => window.location.reload(),
+              700
+            );
+
+          } else {
+
+            toast(
+              "Account created! Check your email to confirm your account."
+            );
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "SIGN UP FAILED:",
+            error
+          );
+
+          toast(
+            error.message ||
+            "Unable to create account."
+          );
+
+        }
+
+      };
+
+
+      /* =====================================================
+         EMAIL SIGN IN
+         ===================================================== */
+
+      window.signIn = async function () {
+
+        try {
+
+          const supabase =
+            await getAuthClient();
+
+          const {
+            emailInput,
+            passwordInput
+          } = getLoginInputs();
+
+          const email =
+            emailInput?.value
+              ?.trim();
+
+          const password =
+            passwordInput?.value || "";
+
+
+          if (!email) {
+            toast("Enter your email.");
+            return;
+          }
+
+
+          if (!password) {
+            toast("Enter your password.");
+            return;
+          }
+
+
+          if (password.length < 6) {
+            toast(
+              "Password must be at least 6 characters."
+            );
+            return;
+          }
+
+
+          toast("Signing in...");
+
+
+          const {
+            data,
+            error
+          } = await supabase.auth
+            .signInWithPassword({
+
+              email: email,
+
+              password: password
+
+            });
+
+
+          if (error) {
+
+            console.error(
+              "SIGN IN ERROR:",
+              error
+            );
+
+            toast(
+              error.message
+            );
+
+            return;
+          }
+
+
+          console.log(
+            "SIGN IN SUCCESS:",
+            data
+          );
+
+
+          toast(
+            "Signed in successfully!"
+          );
+
+
+          setTimeout(
+            () => window.location.reload(),
+            500
+          );
+
+
+        } catch (error) {
+
+          console.error(
+            "SIGN IN FAILED:",
+            error
+          );
+
+          toast(
+            error.message ||
+            "Unable to sign in."
+          );
+
+        }
+
+      };
+
+
+      /* =====================================================
+         GOOGLE LOGIN
+         ===================================================== */
+
+      window.signInWithGoogle = async function () {
+
+        try {
+
+          const supabase =
+            await getAuthClient();
+
+
+          const redirectUrl =
+            window.location.origin;
+
+
+          console.log(
+            "Google redirect URL:",
+            redirectUrl
+          );
+
+
+          const {
+            data,
+            error
+          } = await supabase.auth
+            .signInWithOAuth({
+
+              provider: "google",
+
+              options: {
+
+                redirectTo:
+                  redirectUrl
+
+              }
+
+            });
+
+
+          if (error) {
+
+            console.error(
+              "GOOGLE LOGIN ERROR:",
+              error
+            );
+
+            toast(
+              error.message ||
+              "Google login failed."
+            );
+
+            return;
+          }
+
+
+          console.log(
+            "GOOGLE OAUTH STARTED:",
+            data
+          );
+
+        } catch (error) {
+
+          console.error(
+            "GOOGLE LOGIN FAILED:",
+            error
+          );
+
+          toast(
+            error.message ||
+            "Google login failed."
+          );
+
+        }
+
+      };
+
+
+      /* =====================================================
+         APPLE LOGIN
+         ===================================================== */
+
+      window.signInWithApple = async function () {
+
+        try {
+
+          const supabase =
+            await getAuthClient();
+
+
+          const redirectUrl =
+            window.location.origin;
+
+
+          console.log(
+            "Apple redirect URL:",
+            redirectUrl
+          );
+
+
+          const {
+            data,
+            error
+          } = await supabase.auth
+            .signInWithOAuth({
+
+              provider: "apple",
+
+              options: {
+
+                redirectTo:
+                  redirectUrl
+
+              }
+
+            });
+
+
+          if (error) {
+
+            console.error(
+              "APPLE LOGIN ERROR:",
+              error
+            );
+
+            toast(
+              error.message ||
+              "Apple login failed."
+            );
+
+            return;
+          }
+
+
+          console.log(
+            "APPLE OAUTH STARTED:",
+            data
+          );
+
+        } catch (error) {
+
+          console.error(
+            "APPLE LOGIN FAILED:",
+            error
+          );
+
+          toast(
+            error.message ||
+            "Apple login failed."
+          );
+
+        }
+
+      };
+
+
+      /* =====================================================
+         DO SIGN IN
+         ===================================================== */
+
+      window.doSignIn = function () {
+
+        window.signIn();
+
+      };
+
+
+      console.log(
+        "YatriKavach Auth Bridge Loaded"
+      );
+
+    })();
+  </script>
 </body>
 
 </html>
