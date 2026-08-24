@@ -1,2464 +1,311 @@
-/* =========================================================
-   YATRIKAVACH - APP.JS
-   Full replacement version
-   ========================================================= */
+/* ---------- routing ---------- */
+function showApp(id) { document.querySelectorAll('.app').forEach(a => a.classList.toggle('on', a.id === id)); }
+function pickRole(r) {
+  document.querySelectorAll('.role').forEach(x => x.style.outline = 'none');
+  var lf = document.getElementById('loginform');
+  var sf = document.getElementById('signupform');
+  lf.classList.add('on');
+  sf.classList.remove('on');
+  var btn = document.getElementById('signinBtn');
+  lf.dataset.role = r;
+  sf.dataset.role = r;
+  btn.textContent = r === 'admin' ? 'Sign In as Admin' : 'Sign In as Tourist';
+  document.getElementById('signupBtn').textContent = r === 'admin' ? 'Create Admin Account' : 'Create Tourist Account';
+  lf.scrollIntoView({ behavior: 'smooth' });
+}
+async function doSignIn() { await window.YKAuth.signIn(); }
+async function doSignUp() { await window.YKAuth.signUp(); }
+async function logout() { await window.YKAuth.signOut(); }
 
-
-/* =========================================================
-   ROUTING
-   ========================================================= */
-
-function showApp(id) {
-  document
-    .querySelectorAll(".app")
-    .forEach(app => {
-      app.classList.toggle("on", app.id === id);
-    });
+window.showSignUpForm = function() {
+  document.getElementById('loginform').classList.remove('on');
+  document.getElementById('signupform').classList.add('on');
+}
+window.showLoginForm = function() {
+  document.getElementById('signupform').classList.remove('on');
+  document.getElementById('loginform').classList.add('on');
 }
 
-
-function pickRole(role) {
-
-  document
-    .querySelectorAll(".role")
-    .forEach(x => {
-      x.style.outline = "none";
-    });
-
-  const form =
-    document.getElementById("loginform");
-
-  if (!form) return;
-
-  form.classList.add("on");
-
-  const button =
-    document.getElementById("signinBtn");
-
-  form.dataset.role = role;
-
-  if (button) {
-    button.textContent =
-      role === "admin"
-        ? "Sign In as Admin"
-        : "Sign In as Tourist";
-  }
-
-  form.scrollIntoView({
-    behavior: "smooth"
-  });
-}
-
-
-/* =========================================================
-   SUPABASE STATE
-   ========================================================= */
-
-let sb = null;
-let session = null;
-let currentLocation = null;
-
-
-/* =========================================================
-   TOURIST PAGE ROUTER
-   ========================================================= */
-
+/* ---------- tourist page router ---------- */
 function show(page) {
-
-  document
-    .querySelectorAll("#tourist-app .page")
-    .forEach(p => {
-      p.classList.toggle(
-        "active",
-        p.id === page
-      );
-    });
-
-  const mains = [
-    "home",
-    "map",
-    "chatbot",
-    "messages"
-  ];
-
-  const nav =
-    document.getElementById("t-nav");
-
-  if (nav) {
-    nav.style.display =
-      mains.includes(page)
-        ? "flex"
-        : "none";
-  }
-
-  document
-    .querySelectorAll("#t-nav .n")
-    .forEach(n => {
-      n.classList.toggle(
-        "on",
-        n.dataset.tab === page
-      );
-    });
-
-  const element =
-    document.getElementById(page);
-
-  if (element) {
-    element.scrollTop = 0;
-  }
-
+  document.querySelectorAll('#tourist-app .page').forEach(p => p.classList.toggle('active', p.id === page));
+  var mains = ['home', 'map', 'chatbot', 'messages'];
+  var nav = document.getElementById('t-nav');
+  nav.style.display = mains.includes(page) ? 'flex' : 'none';
+  document.querySelectorAll('#t-nav .n').forEach(n => n.classList.toggle('on', n.dataset.tab === page));
+  var el = document.getElementById(page); if (el) el.scrollTop = 0;
   closeDrawer();
 }
 
+/* ---------- drawer ---------- */
+function openDrawer() { document.getElementById('drawer').classList.add('on'); document.getElementById('scrim').classList.add('on'); }
+function closeDrawer() { document.getElementById('drawer').classList.remove('on'); document.getElementById('scrim').classList.remove('on'); }
 
-/* =========================================================
-   DRAWER
-   ========================================================= */
-
-function openDrawer() {
-
-  document
-    .getElementById("drawer")
-    ?.classList.add("on");
-
-  document
-    .getElementById("scrim")
-    ?.classList.add("on");
+/* ---------- toast ---------- */
+function toast(msg) {
+  var wrap = document.querySelector('#tourist-app.on') ? { t: 'toast', x: 'toastText' } : { t: 'toast2', x: 'toastText2' };
+  var el = document.getElementById(wrap.t); if (!el) { el = document.getElementById('toast'); }
+  var tx = document.getElementById(wrap.x); if (!tx) { tx = document.getElementById('toastText'); }
+  tx.textContent = msg; el.classList.add('on');
+  clearTimeout(window._tt); window._tt = setTimeout(() => el.classList.remove('on'), 2200);
 }
 
-
-function closeDrawer() {
-
-  document
-    .getElementById("drawer")
-    ?.classList.remove("on");
-
-  document
-    .getElementById("scrim")
-    ?.classList.remove("on");
+/* ---------- chips ---------- */
+function pickChip(el) {
+  var row = el.parentElement;
+  row.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  toast('Filter: ' + el.textContent);
 }
 
-
-/* =========================================================
-   TOAST
-   ========================================================= */
-
-function toast(message) {
-
-  let targetToast =
-    document.querySelector(
-      "#tourist-app.on"
-    )
-      ? "toast"
-      : "toast2";
-
-  let targetText =
-    document.querySelector(
-      "#tourist-app.on"
-    )
-      ? "toastText"
-      : "toastText2";
-
-  let toastElement =
-    document.getElementById(targetToast);
-
-  if (!toastElement) {
-    toastElement =
-      document.getElementById("toast");
-  }
-
-  let textElement =
-    document.getElementById(targetText);
-
-  if (!textElement) {
-    textElement =
-      document.getElementById("toastText");
-  }
-
-  if (!toastElement || !textElement) {
-    console.log("TOAST:", message);
-    return;
-  }
-
-  textElement.textContent = message;
-
-  toastElement.classList.add("on");
-
-  clearTimeout(window._ykToastTimer);
-
-  window._ykToastTimer =
-    setTimeout(() => {
-      toastElement.classList.remove("on");
-    }, 2500);
-}
-
-
-/* =========================================================
-   CHIPS
-   ========================================================= */
-
-function pickChip(element) {
-
-  if (!element) return;
-
-  const row =
-    element.parentElement;
-
-  row
-    ?.querySelectorAll(".chip")
-    .forEach(chip => {
-      chip.classList.remove("on");
-    });
-
-  element.classList.add("on");
-
-  toast(
-    "Filter: " +
-    element.textContent
-  );
-}
-
-
-/* =========================================================
-   SOS
-   ========================================================= */
-
-let sosCount = 0;
-let sosTimer = null;
-let sosFired = false;
-
-
-function openSOS() {
-
-  document
-    .getElementById("sos")
-    ?.classList.add("on");
-
-  resetSOS();
-}
-
-
-function closeSOS() {
-
-  clearInterval(sosTimer);
-
-  document
-    .getElementById("sos")
-    ?.classList.remove("on");
-
-  resetSOS();
-}
-
-
+/* ---------- SOS ---------- */
+var sosCount = 0, sosTimer = null, sosFired = false;
+function openSOS() { document.getElementById('sos').classList.add('on'); resetSOS(); }
+function closeSOS() { clearInterval(sosTimer); document.getElementById('sos').classList.remove('on'); resetSOS(); }
 function resetSOS() {
-
-  sosFired = false;
-  sosCount = 0;
-
-  clearInterval(sosTimer);
-
-  const number =
-    document.getElementById("sosNum");
-
-  const label =
-    document.getElementById("sosLabel");
-
-  const title =
-    document.getElementById("sosTitle");
-
-  const sub =
-    document.getElementById("sosSub");
-
-  if (number) {
-    number.innerHTML =
-      '<svg width="46" height="46" viewBox="0 0 24 24" fill="none">' +
-      '<path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z" fill="#fff"/>' +
-      "</svg>";
-  }
-
-  if (label) {
-    label.textContent =
-      "HOLD TO ALERT";
-  }
-
-  if (title) {
-    title.textContent =
-      "EMERGENCY SOS";
-  }
-
-  if (sub) {
-    sub.textContent =
-      "Press & hold to alert tourist police, your embassy & trusted contacts with your live location.";
-  }
-
-  [
-    "n-police",
-    "n-helpline",
-    "n-sarah"
-  ].forEach(id => {
-    document
-      .getElementById(id)
-      ?.classList.remove("done");
-  });
+  sosFired = false; sosCount = 0; clearInterval(sosTimer);
+  document.getElementById('sosNum').innerHTML = '<svg width="46" height="46" viewBox="0 0 24 24" fill="none"><path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z" fill="#fff"/></svg>';
+  document.getElementById('sosLabel').textContent = 'HOLD TO ALERT';
+  document.getElementById('sosTitle').textContent = 'EMERGENCY SOS';
+  document.getElementById('sosSub').textContent = 'Press & hold to alert tourist police, your embassy & trusted contacts with your live location.';
+  ['n-police', 'n-helpline', 'n-sarah'].forEach(id => document.getElementById(id).classList.remove('done'));
 }
-
-
 function startHold() {
-
   if (sosFired) return;
-
-  clearInterval(sosTimer);
-
-  sosCount = 3;
-
-  const number =
-    document.getElementById("sosNum");
-
-  const label =
-    document.getElementById("sosLabel");
-
-  if (number) {
-    number.textContent = "3";
-  }
-
-  if (label) {
-    label.textContent =
-      "KEEP HOLDING";
-  }
-
-  sosTimer =
-    setInterval(() => {
-
-      sosCount--;
-
-      if (sosCount <= 0) {
-
-        clearInterval(sosTimer);
-
-        fireSOS();
-
-      } else {
-
-        if (number) {
-          number.textContent =
-            sosCount;
-        }
-
-      }
-
-    }, 1000);
+  sosCount = 3; document.getElementById('sosNum').textContent = '3'; document.getElementById('sosLabel').textContent = 'KEEP HOLDING';
+  sosTimer = setInterval(() => {
+    sosCount--;
+    if (sosCount <= 0) { clearInterval(sosTimer); fireSOS(); }
+    else document.getElementById('sosNum').textContent = sosCount;
+  }, 1000);
 }
-
-
 function endHold() {
-
   if (sosFired) return;
-
   clearInterval(sosTimer);
-
-  const number =
-    document.getElementById("sosNum");
-
-  const label =
-    document.getElementById("sosLabel");
-
-  if (number) {
-    number.innerHTML =
-      '<svg width="46" height="46" viewBox="0 0 24 24" fill="none">' +
-      '<path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z" fill="#fff"/>' +
-      "</svg>";
-  }
-
-  if (label) {
-    label.textContent =
-      "HOLD TO ALERT";
-  }
+  document.getElementById('sosNum').innerHTML = '<svg width="46" height="46" viewBox="0 0 24 24" fill="none"><path d="M6.6 2.5 3.9 3.2A2 2 0 0 0 2.5 5.6c.6 6.6 6.3 12.3 12.9 12.9a2 2 0 0 0 2.4-1.4l.7-2.7a1.6 1.6 0 0 0-1-1.9l-2.9-1.1a1.6 1.6 0 0 0-1.8.5l-.9 1.1a12 12 0 0 1-4.6-4.6l1.1-.9a1.6 1.6 0 0 0 .5-1.8L8.5 3.5a1.6 1.6 0 0 0-1.9-1z" fill="#fff"/></svg>';
+  document.getElementById('sosLabel').textContent = 'HOLD TO ALERT';
 }
-
-
-async function fireSOS() {
-
+function fireSOS() {
   sosFired = true;
-
-  const number =
-    document.getElementById("sosNum");
-
-  const label =
-    document.getElementById("sosLabel");
-
-  const title =
-    document.getElementById("sosTitle");
-
-  const sub =
-    document.getElementById("sosSub");
-
-  if (number) {
-    number.innerHTML =
-      '<svg width="52" height="52" viewBox="0 0 24 24" fill="none">' +
-      '<path d="M5 12l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
-      "</svg>";
-  }
-
-  if (label) {
-    label.textContent =
-      "ALERT SENT";
-  }
-
-  if (title) {
-    title.textContent =
-      "HELP IS ON THE WAY";
-  }
-
-  if (sub) {
-    sub.textContent =
-      "Your live location and Digital ID have been shared. Stay where you are if safe.";
-  }
-
-  [
-    "n-police",
-    "n-helpline",
-    "n-sarah"
-  ].forEach((id, index) => {
-
-    setTimeout(() => {
-
-      document
-        .getElementById(id)
-        ?.classList.add("done");
-
-    }, 500 + index * 700);
-
-  });
-
-  /*
-   * Also send the real SOS to backend
-   * if the user is authenticated.
-   */
-
-  if (session) {
-
-    try {
-
-      await api(
-        "/api/sos",
-        {
-          method: "POST",
-
-          body: JSON.stringify({
-            latitude:
-              currentLocation?.latitude ||
-              null,
-
-            longitude:
-              currentLocation?.longitude ||
-              null,
-
-            place_name:
-              currentLocation?.place_name ||
-              null
-          })
-        }
-      );
-
-    } catch (error) {
-
-      console.error(
-        "SOS backend error:",
-        error
-      );
-
-    }
-
-  }
+  document.getElementById('sosNum').innerHTML = '<svg width="52" height="52" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 7" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.getElementById('sosLabel').textContent = 'ALERT SENT';
+  document.getElementById('sosTitle').textContent = 'HELP IS ON THE WAY';
+  document.getElementById('sosSub').textContent = 'Your live location and Digital ID have been shared. Stay where you are if safe.';
+  var ids = ['n-police', 'n-helpline', 'n-sarah'];
+  ids.forEach((id, i) => setTimeout(() => document.getElementById(id).classList.add('done'), 500 + i * 700));
 }
+document.addEventListener('DOMContentLoaded', () => {
+  var c = document.getElementById('sosCircle');
+  if (c) {
+    c.addEventListener('mousedown', startHold);
+    c.addEventListener('mouseup', endHold);
+    c.addEventListener('mouseleave', endHold);
+    c.addEventListener('touchstart', function (e) { e.preventDefault(); startHold(); }, { passive: false });
+    c.addEventListener('touchend', function (e) { e.preventDefault(); endHold(); }, { passive: false });
+  }
+});
 
-
-/* =========================================================
-   CHAT UI
-   ========================================================= */
-
-function addMsg(
-  scrollId,
-  text,
-  who
-) {
-
-  const container =
-    document.getElementById(
-      scrollId
-    );
-
-  if (!container) return;
-
-  if (who === "bot") {
-
-    const wrapper =
-      document.createElement("div");
-
-    wrapper.className =
-      "msg bot-wrap";
-
-    wrapper.innerHTML =
-      '<div class="bav">' +
-      '<svg width="17" height="17" viewBox="0 0 24 24" fill="none">' +
-      '<path d="M12 3l1.8 4.9L18.7 9l-4.9 1.8L12 15.7l-1.8-4.9L5.3 9l4.9-1.2L12 3z" stroke="#212121" stroke-width="1.6" stroke-linejoin="round"/>' +
-      "</svg>" +
-      "</div>" +
-      '<div class="msg bot">' +
-      text +
-      "</div>";
-
-    container.appendChild(wrapper);
-
+/* ---------- chatbot ---------- */
+function addMsg(scrollId, text, who) {
+  var s = document.getElementById(scrollId);
+  if (who === 'bot') {
+    var w = document.createElement('div'); w.className = 'msg bot-wrap';
+    w.innerHTML = '<div class="bav"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.9L18.7 9l-4.9 1.8L12 15.7l-1.8-4.9L5.3 9l4.9-1.2L12 3z" stroke="#212121" stroke-width="1.6" stroke-linejoin="round"/></svg></div><div class="msg bot">' + text + '</div>';
+    s.appendChild(w);
   } else {
-
-    const message =
-      document.createElement("div");
-
-    message.className =
-      "msg " + who;
-
-    message.textContent =
-      text;
-
-    container.appendChild(message);
+    var m = document.createElement('div'); m.className = 'msg ' + who; m.textContent = text; s.appendChild(m);
   }
-
-  container.scrollTop =
-    container.scrollHeight;
+  s.scrollTop = s.scrollHeight;
 }
+async function sendChat() { await window.YKApp.sendChat(); }
+function quickAsk(q) { document.getElementById('chatInput').value = q; sendChat(); }
 
+/* ---------- messages / threads ---------- */
 
-/* =========================================================
-   SUPABASE INITIALIZATION
-   ========================================================= */
-
-async function init() {
-
-  try {
-
-    console.log(
-      "Initializing YatriKavach..."
-    );
-
-    const response =
-      await fetch(
-        "/api/config",
-        {
-          cache: "no-store"
-        }
-      );
-
-    if (!response.ok) {
-
-      throw new Error(
-        "Unable to load Supabase configuration."
-      );
-    }
-
-    const config =
-      await response.json();
-
-    console.log(
-      "Supabase config received:",
-      {
-        hasUrl:
-          !!config.supabaseUrl,
-
-        hasAnonKey:
-          !!config.supabaseAnonKey
-      }
-    );
-
-    if (
-      !config.supabaseUrl ||
-      !config.supabaseAnonKey
-    ) {
-
-      throw new Error(
-        "Supabase URL or anon key is missing."
-      );
-    }
-
-    if (!window.supabase) {
-
-      throw new Error(
-        "Supabase JavaScript library is not loaded."
-      );
-    }
-
-    /*
-     * Create Supabase client.
-     */
-
-    sb =
-      window.supabase.createClient(
-        config.supabaseUrl,
-        config.supabaseAnonKey
-      );
-
-    /*
-     * Get existing session.
-     */
-
-    const {
-      data,
-      error
-    } =
-      await sb.auth.getSession();
-
-    if (error) {
-
-      console.error(
-        "Session error:",
-        error
-      );
-
-    }
-
-    session =
-      data?.session ||
-      null;
-
-    /*
-     * Auth listener.
-     */
-
-    sb.auth.onAuthStateChange(
-      async (
-        event,
-        newSession
-      ) => {
-
-        console.log(
-          "Supabase auth event:",
-          event
-        );
-
-        session =
-          newSession;
-
-        if (newSession) {
-
-          /*
-           * Avoid loading profile
-           * during some intermediate
-           * OAuth events.
-           */
-
-          if (
-            event === "SIGNED_IN" ||
-            event === "INITIAL_SESSION" ||
-            event === "TOKEN_REFRESHED" ||
-            event === "USER_UPDATED"
-          ) {
-
-            await loadUser();
-
-          }
-
-        } else {
-
-          showApp(
-            "login-app"
-          );
-
-        }
-
-      }
-    );
-
-    /*
-     * If a session already exists,
-     * load the user.
-     */
-
-    if (session) {
-
-      await loadUser();
-
-    } else {
-
-      showApp(
-        "login-app"
-      );
-
-    }
-
-    console.log(
-      "YatriKavach Supabase initialized successfully."
-    );
-
-    return true;
-
-  } catch (error) {
-
-    console.error(
-      "Supabase initialization error:",
-      error
-    );
-
-    toast(
-      error.message ||
-      "Could not connect to Supabase."
-    );
-
-    return false;
-  }
+/* ---------- favourites / faq / about ---------- */
+function toggleHeart(el) {
+  var i = el.querySelector('i');
+  if (el.textContent.trim().startsWith('Saved')) { el.innerHTML = '<i style="background:#8A8A8A"></i>Removed'; toast('Removed from favourites'); }
+  else { el.innerHTML = '<i style="background:#FF6B6B"></i>Saved'; toast('Added to favourites'); }
 }
+function toggleFaq(el) { el.classList.toggle('open'); }
+function toggleAbout(el) { el.classList.toggle('open'); }
 
-
-/* =========================================================
-   BACKEND API HELPER
-   ========================================================= */
-
-async function api(
-  path,
-  options = {}
-) {
-
-  if (!session) {
-
-    throw new Error(
-      "Please sign in first."
-    );
-  }
-
-  const headers =
-    Object.assign(
-
-      {
-        "Content-Type":
-          "application/json"
-      },
-
-      options.headers || {},
-
-      {
-        Authorization:
-          "Bearer " +
-          session.access_token
-      }
-
-    );
-
-  const response =
-    await fetch(
-      path,
-      Object.assign(
-        {},
-        options,
-        {
-          headers
-        }
-      )
-    );
-
-  const data =
-    await response
-      .json()
-      .catch(
-        () => ({})
-      );
-
-  if (!response.ok) {
-
-    throw new Error(
-      data.detail ||
-      data.message ||
-      "Request failed."
-    );
-  }
-
-  return data;
-}
-
-
-/* =========================================================
-   UI HELPERS
-   ========================================================= */
-
-function txt(
-  id,
-  value
-) {
-
-  const element =
-    document.getElementById(id);
-
-  if (element) {
-
-    element.textContent =
-      value ?? "—";
-  }
-}
-
-
-function initials(name) {
-
-  if (!name) {
-    return "?";
-  }
-
-  return name
-    .split(/\s+/)
-    .map(
-      part =>
-        part[0]
-    )
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
-
-/* =========================================================
-   LOAD USER
-   ========================================================= */
-
-async function loadUser() {
-
-  if (!session) {
-    return;
-  }
-
-  try {
-
-    console.log(
-      "Loading user:",
-      session.user?.email
-    );
-
-    const profile =
-      await api(
-        "/api/profile"
-      );
-
-    const email =
-      session.user?.email ||
-      "";
-
-    const name =
-      profile.full_name ||
-      session.user?.user_metadata
-        ?.full_name ||
-      email.split("@")[0] ||
-      "Traveller";
-
-    txt(
-      "greeting",
-      "Hello " +
-      name +
-      "!"
-    );
-
-    txt(
-      "profileName",
-      name
-    );
-
-    txt(
-      "drawerName",
-      name
-    );
-
-    txt(
-      "profileFullName",
-      name
-    );
-
-    txt(
-      "profileNationality",
-      profile.nationality ||
-      "Not added"
-    );
-
-    const avatar =
-      initials(name);
-
-    txt(
-      "homeAvatar",
-      avatar
-    );
-
-    txt(
-      "drawerAvatar",
-      avatar
-    );
-
-    const role =
-      profile.role ||
-      "tourist";
-
-    if (
-      role === "admin"
-    ) {
-
-      showApp(
-        "admin-app"
-      );
-
-      adminGo(
-        "a-dashboard"
-      );
-
-    } else {
-
-      showApp(
-        "tourist-app"
-      );
-
-      show(
-        "home"
-      );
-
-      await refresh();
-
-      track();
-    }
-
-  } catch (error) {
-
-    console.error(
-      "loadUser error:",
-      error
-    );
-
-    /*
-     * Important:
-     * Don't destroy the valid Supabase
-     * session just because /api/profile
-     * has an error.
-     */
-
-    toast(
-      error.message ||
-      "Unable to load your profile."
-    );
-  }
-}
-
-
-/* =========================================================
-   EMAIL SIGN IN
-   ========================================================= */
-
-async function signIn() {
-
-  try {
-
-    if (!sb) {
-
-      const initialized =
-        await init();
-
-      if (!initialized) {
-        return;
-      }
-    }
-
-    if (!sb) {
-
-      throw new Error(
-        "Supabase is not initialized."
-      );
-    }
-
-    const inputs =
-      [
-        ...document.querySelectorAll(
-          "#loginform input"
-        )
-      ];
-
-    const emailInput =
-      inputs.find(
-        input =>
-          input.type ===
-          "email"
-      );
-
-    const passwordInput =
-      inputs.find(
-        input =>
-          input.type ===
-          "password"
-      );
-
-    const email =
-      emailInput
-        ?.value
-        ?.trim();
-
-    const password =
-      passwordInput
-        ?.value ||
-      "";
-
-    if (!email) {
-
-      toast(
-        "Enter your email."
-      );
-
-      return;
-    }
-
-    if (!password) {
-
-      toast(
-        "Enter your password."
-      );
-
-      return;
-    }
-
-    if (password.length < 6) {
-
-      toast(
-        "Password must be at least 6 characters."
-      );
-
-      return;
-    }
-
-    toast(
-      "Signing in..."
-    );
-
-    const {
-      data,
-      error
-    } =
-      await sb.auth
-        .signInWithPassword({
-          email,
-          password
-        });
-
-    if (error) {
-
-      console.error(
-        "Sign in error:",
-        error
-      );
-
-      toast(
-        error.message
-      );
-
-      return;
-    }
-
-    session =
-      data?.session ||
-      null;
-
-    if (!session) {
-
-      throw new Error(
-        "Login succeeded but no session was returned."
-      );
-    }
-
-    toast(
-      "Signed in successfully."
-    );
-
-    await loadUser();
-
-  } catch (error) {
-
-    console.error(
-      "Sign in failed:",
-      error
-    );
-
-    toast(
-      error.message ||
-      "Unable to sign in."
-    );
-  }
-}
-
-
-/* =========================================================
-   CREATE ACCOUNT
-   ========================================================= */
-
-async function signUp() {
-
-  try {
-
-    if (!sb) {
-
-      const initialized =
-        await init();
-
-      if (!initialized) {
-        return;
-      }
-    }
-
-    if (!sb) {
-
-      throw new Error(
-        "Supabase is not initialized."
-      );
-    }
-
-    const inputs =
-      [
-        ...document.querySelectorAll(
-          "#loginform input"
-        )
-      ];
-
-    const emailInput =
-      inputs.find(
-        input =>
-          input.type ===
-          "email"
-      );
-
-    const passwordInput =
-      inputs.find(
-        input =>
-          input.type ===
-          "password"
-      );
-
-    const email =
-      emailInput
-        ?.value
-        ?.trim();
-
-    const password =
-      passwordInput
-        ?.value ||
-      "";
-
-    if (!email) {
-
-      toast(
-        "Enter your email."
-      );
-
-      return;
-    }
-
-    if (!password) {
-
-      toast(
-        "Enter a password."
-      );
-
-      return;
-    }
-
-    if (password.length < 6) {
-
-      toast(
-        "Password must be at least 6 characters."
-      );
-
-      return;
-    }
-
-    toast(
-      "Creating your account..."
-    );
-
-    const fullName =
-      email.split("@")[0];
-
-    const {
-      data,
-      error
-    } =
-      await sb.auth
-        .signUp({
-
-          email,
-
-          password,
-
-          options: {
-
-            data: {
-              full_name:
-                fullName
-            }
-
-          }
-
-        });
-
-    if (error) {
-
-      console.error(
-        "Signup error:",
-        error
-      );
-
-      toast(
-        error.message
-      );
-
-      return;
-    }
-
-    /*
-     * Supabase may return a session
-     * immediately if email confirmation
-     * is disabled.
-     */
-
-    if (data?.session) {
-
-      session =
-        data.session;
-
-      toast(
-        "Account created successfully!"
-      );
-
-      await loadUser();
-
-      return;
-    }
-
-    /*
-     * If confirmation is enabled,
-     * Supabase creates the account but
-     * doesn't give us a session yet.
-     */
-
-    toast(
-      "Account created! Check your email to confirm your account."
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Signup failed:",
-      error
-    );
-
-    toast(
-      error.message ||
-      "Unable to create account."
-    );
-  }
-}
-
-
-/* =========================================================
-   GOOGLE LOGIN
-   ========================================================= */
-
-async function signInWithGoogle() {
-
-  try {
-
-    if (!sb) {
-
-      const initialized =
-        await init();
-
-      if (!initialized) {
-        return;
-      }
-    }
-
-    if (!sb) {
-
-      throw new Error(
-        "Supabase is not initialized."
-      );
-    }
-
-    const redirectUrl =
-      window.location.origin;
-
-    console.log(
-      "Google OAuth redirect:",
-      redirectUrl
-    );
-
-    const {
-      data,
-      error
-    } =
-      await sb.auth
-        .signInWithOAuth({
-
-          provider:
-            "google",
-
-          options: {
-
-            redirectTo:
-              redirectUrl
-
-          }
-
-        });
-
-    if (error) {
-
-      console.error(
-        "Google login error:",
-        error
-      );
-
-      toast(
-        error.message ||
-        "Google login failed."
-      );
-
-      return;
-    }
-
-    console.log(
-      "Google OAuth started:",
-      data
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Google login failed:",
-      error
-    );
-
-    toast(
-      error.message ||
-      "Google login failed."
-    );
-  }
-}
-
-
-/* =========================================================
-   APPLE LOGIN
-   ========================================================= */
-
-async function signInWithApple() {
-
-  try {
-
-    if (!sb) {
-
-      const initialized =
-        await init();
-
-      if (!initialized) {
-        return;
-      }
-    }
-
-    if (!sb) {
-
-      throw new Error(
-        "Supabase is not initialized."
-      );
-    }
-
-    const redirectUrl =
-      window.location.origin;
-
-    console.log(
-      "Apple OAuth redirect:",
-      redirectUrl
-    );
-
-    const {
-      data,
-      error
-    } =
-      await sb.auth
-        .signInWithOAuth({
-
-          provider:
-            "apple",
-
-          options: {
-
-            redirectTo:
-              redirectUrl
-
-          }
-
-        });
-
-    if (error) {
-
-      console.error(
-        "Apple login error:",
-        error
-      );
-
-      toast(
-        error.message ||
-        "Apple login failed."
-      );
-
-      return;
-    }
-
-    console.log(
-      "Apple OAuth started:",
-      data
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Apple login failed:",
-      error
-    );
-
-    toast(
-      error.message ||
-      "Apple login failed."
-    );
-  }
-}
-
-
-/* =========================================================
-   SIGN OUT
-   ========================================================= */
-
-async function signOut() {
-
-  try {
-
-    if (sb) {
-
-      const {
-        error
-      } =
-        await sb.auth.signOut();
-
-      if (error) {
-
-        console.error(
-          "Sign out error:",
-          error
-        );
-
-        toast(
-          error.message
-        );
-      }
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Sign out failed:",
-      error
-    );
-  }
-
-  session = null;
-
-  showApp(
-    "login-app"
-  );
-
-  document
-    .getElementById(
-      "loginform"
-    )
-    ?.classList
-    .remove("on");
-}
-
-
-/* =========================================================
-   CURRENT LOCATION / CONTEXT
-   ========================================================= */
-
-async function refresh() {
-
-  if (!session) {
-    return;
-  }
-
-  try {
-
-    const [
-      profile,
-      context
-    ] =
-      await Promise.all([
-
-        api(
-          "/api/profile"
-        ),
-
-        api(
-          "/api/context"
-        )
-
-      ]);
-
-    const name =
-      profile.full_name ||
-      session.user
-        ?.email
-        ?.split("@")[0] ||
-      "Traveller";
-
-    txt(
-      "greeting",
-      "Hello " +
-      name +
-      "!"
-    );
-
-    txt(
-      "profileName",
-      name
-    );
-
-    txt(
-      "drawerName",
-      name
-    );
-
-    const avatar =
-      initials(name);
-
-    txt(
-      "homeAvatar",
-      avatar
-    );
-
-    txt(
-      "drawerAvatar",
-      avatar
-    );
-
-    txt(
-      "currentLocation",
-      context
-        ?.location
-        ?.place_name ||
-      "Location unavailable"
-    );
-
-    txt(
-      "safetyScore",
-      context?.score ??
-      "—"
-    );
-
-    currentLocation =
-      context?.location ||
-      null;
-
-  } catch (error) {
-
-    console.error(
-      "Refresh error:",
-      error
-    );
-
-  }
-}
-
-
-/* =========================================================
-   LOCATION TRACKING
-   ========================================================= */
-
-async function sendPos(
-  position
-) {
-
-  if (!session) {
-    return;
-  }
-
-  try {
-
-    const data =
-      await api(
-        "/api/location",
-        {
-          method:
-            "POST",
-
-          body:
-            JSON.stringify({
-
-              latitude:
-                position.coords
-                  .latitude,
-
-              longitude:
-                position.coords
-                  .longitude,
-
-              accuracy:
-                position.coords
-                  .accuracy
-
-            })
-
-        }
-      );
-
-    currentLocation =
-      data.location;
-
-    txt(
-      "currentLocation",
-      data.place_name ||
-      "Current location"
-    );
-
-    await refresh();
-
-  } catch (error) {
-
-    console.error(
-      "Location error:",
-      error
-    );
-  }
-}
-
-
-function track() {
-
-  if (
-    !navigator.geolocation
-  ) {
-
-    console.warn(
-      "Geolocation is not supported."
-    );
-
-    return;
-  }
-
-  navigator.geolocation
-    .getCurrentPosition(
-
-      sendPos,
-
-      error => {
-
-        console.warn(
-          "Location permission:",
-          error.message
-        );
-
-      },
-
-      {
-        enableHighAccuracy:
-          true,
-
-        timeout:
-          10000
-      }
-
-    );
-
-  navigator.geolocation
-    .watchPosition(
-
-      sendPos,
-
-      error => {
-
-        console.warn(
-          "Location watch:",
-          error.message
-        );
-
-      },
-
-      {
-
-        enableHighAccuracy:
-          true,
-
-        maximumAge:
-          15000,
-
-        timeout:
-          10000
-
-      }
-
-    );
-}
-
-
-/* =========================================================
-   AI CHAT
-   ========================================================= */
-
-async function chat() {
-
-  const input =
-    document.getElementById(
-      "chatInput"
-    );
-
-  const message =
-    input
-      ?.value
-      ?.trim();
-
-  if (!message) {
-    return;
-  }
-
-  addMsg(
-    "chatScroll",
-    message,
-    "user"
-  );
-
-  input.value = "";
-
-  try {
-
-    const data =
-      await api(
-        "/api/chat",
-        {
-
-          method:
-            "POST",
-
-          body:
-            JSON.stringify({
-
-              message,
-
-              latitude:
-                currentLocation
-                  ?.latitude ||
-                null,
-
-              longitude:
-                currentLocation
-                  ?.longitude ||
-                null,
-
-              place_name:
-                currentLocation
-                  ?.place_name ||
-                null
-
-            })
-
-        }
-      );
-
-    addMsg(
-      "chatScroll",
-      data.answer,
-      "bot"
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Chat error:",
-      error
-    );
-
-    addMsg(
-      "chatScroll",
-      "AI service is unavailable right now.",
-      "bot"
-    );
-  }
-}
-
-
-function sendChat() {
-
-  return chat();
-}
-
-
-function quickAsk(
-  question
-) {
-
-  const input =
-    document.getElementById(
-      "chatInput"
-    );
-
-  if (!input) return;
-
-  input.value =
-    question;
-
-  chat();
-}
-
-
-/* =========================================================
-   THREAD CHAT
-   ========================================================= */
-
-async function openThread(
-  key
-) {
-
-  showApp(
-    "tourist-app"
-  );
-
-  show(
-    "thread"
-  );
-
-  const threadName =
-    document.getElementById(
-      "threadName"
-    );
-
-  const box =
-    document.getElementById(
-      "threadScroll"
-    );
-
-  if (!box) {
-    return;
-  }
-
-  /*
-   * If a specific demo thread was
-   * requested, keep its name.
-   */
-
-  const names = {
-
-    support:
-      "YatriKavach Support",
-
-    helpline:
-      "Tourist Helpline Jaipur",
-
-    sarah:
-      "Sarah",
-
-    raj:
-      "Local Guide · Raj",
-
-    embassy:
-      "German Embassy",
-
-    hotel:
-      "Rambagh Hotel · Front Desk"
-
-  };
-
-  if (
-    threadName &&
-    names[key]
-  ) {
-
-    threadName.textContent =
-      names[key];
-  }
-
-  box.innerHTML = "";
-
-  /*
-   * Real chat history from backend.
-   */
-
-  if (!session) {
-
-    addMsg(
-      "threadScroll",
-      "Please sign in to view your messages.",
-      "bot"
-    );
-
-    return;
-  }
-
-  try {
-
-    const messages =
-      await api(
-        "/api/chat/history"
-      );
-
-    if (
-      !messages ||
-      !messages.length
-    ) {
-
-      addMsg(
-        "threadScroll",
-        "No messages yet. Start a conversation with YatriKavach.",
-        "bot"
-      );
-
-      return;
-    }
-
-    messages.forEach(
-      message => {
-
-        addMsg(
-
-          "threadScroll",
-
-          message.message,
-
-          message.role ===
-          "assistant"
-            ? "bot"
-            : "user"
-
-        );
-
-      }
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Chat history error:",
-      error
-    );
-
-    addMsg(
-      "threadScroll",
-      "Unable to load your messages right now.",
-      "bot"
-    );
-  }
-}
-
-
-async function sendThread() {
-
-  const input =
-    document.getElementById(
-      "threadInput"
-    );
-
-  const message =
-    input
-      ?.value
-      ?.trim();
-
-  if (!message) {
-    return;
-  }
-
-  addMsg(
-    "threadScroll",
-    message,
-    "user"
-  );
-
-  input.value = "";
-
-  try {
-
-    const data =
-      await api(
-        "/api/chat",
-        {
-
-          method:
-            "POST",
-
-          body:
-            JSON.stringify({
-
-              message,
-
-              latitude:
-                currentLocation
-                  ?.latitude ||
-                null,
-
-              longitude:
-                currentLocation
-                  ?.longitude ||
-                null,
-
-              place_name:
-                currentLocation
-                  ?.place_name ||
-                null
-
-            })
-
-        }
-      );
-
-    addMsg(
-      "threadScroll",
-      data.answer,
-      "bot"
-    );
-
-  } catch (error) {
-
-    console.error(
-      "Thread message error:",
-      error
-    );
-
-    addMsg(
-      "threadScroll",
-      "Unable to send right now.",
-      "bot"
-    );
-  }
-}
-
-
-/* =========================================================
-   FAVOURITES / FAQ / ABOUT
-   ========================================================= */
-
-function toggleHeart(
-  element
-) {
-
-  if (!element) return;
-
-  if (
-    element.textContent
-      .trim()
-      .startsWith("Saved")
-  ) {
-
-    element.innerHTML =
-      '<i style="background:#8A8A8A"></i>Removed';
-
-    toast(
-      "Removed from favourites"
-    );
-
-  } else {
-
-    element.innerHTML =
-      '<i style="background:#FF6B6B"></i>Saved';
-
-    toast(
-      "Added to favourites"
-    );
-  }
-}
-
-
-function toggleFaq(
-  element
-) {
-
-  element
-    ?.classList
-    .toggle("open");
-}
-
-
-function toggleAbout(
-  element
-) {
-
-  element
-    ?.classList
-    .toggle("open");
-}
-
-
-/* =========================================================
-   ADMIN
-   ========================================================= */
-
+/* ---------- admin ---------- */
 function adminGo(id) {
-
-  document
-    .querySelectorAll(
-      "#admin-app .apage"
-    )
-    .forEach(page => {
-
-      page.classList.toggle(
-        "active",
-        page.id === id
-      );
-
-    });
-
-  document
-    .querySelectorAll(
-      ".a-sidebar .srow"
-    )
-    .forEach(row => {
-
-      row.classList.toggle(
-        "on",
-        row.dataset.a === id
-      );
-
-    });
-
-  const element =
-    document.getElementById(id);
-
-  if (element) {
-    element.scrollTop = 0;
-  }
-
+  document.querySelectorAll('#admin-app .apage').forEach(p => p.classList.toggle('active', p.id === id));
+  document.querySelectorAll('.a-sidebar .srow').forEach(r => r.classList.toggle('on', r.dataset.a === id));
+  var el = document.getElementById(id); if (el) el.scrollTop = 0;
   closeSidebar();
 }
-
-
-function openSidebar() {
-
-  document
-    .getElementById(
-      "a-sidebar"
-    )
-    ?.classList.add("on");
-
-  document
-    .getElementById(
-      "a-scrim"
-    )
-    ?.classList.add("on");
+function openSidebar() { document.getElementById('a-sidebar').classList.add('on'); document.getElementById('a-scrim').classList.add('on'); }
+function closeSidebar() { document.getElementById('a-sidebar').classList.remove('on'); document.getElementById('a-scrim').classList.remove('on'); }
+function toggleStepper(id) {
+  document.querySelectorAll('.stepper').forEach(s => { if (s.id !== id) s.classList.remove('on'); });
+  document.getElementById(id).classList.toggle('on');
+}
+function toggleSwitch(el) {
+  var on = el.dataset.on === '1'; el.dataset.on = on ? '0' : '1';
+  var knob = el.firstElementChild;
+  el.style.background = on ? '#ddd' : '#212121';
+  knob.style.left = on ? '3px' : '23px';
+  toast(on ? 'Auto-report off' : 'Auto-report scheduled');
 }
 
 
-function closeSidebar() {
-
-  document
-    .getElementById(
-      "a-sidebar"
-    )
-    ?.classList.remove("on");
-
-  document
-    .getElementById(
-      "a-scrim"
-    )
-    ?.classList.remove("on");
-}
-
-
-function toggleStepper(
-  id
-) {
-
-  document
-    .querySelectorAll(
-      ".stepper"
-    )
-    .forEach(step => {
-
-      if (
-        step.id !== id
-      ) {
-
-        step.classList.remove(
-          "on"
-        );
-
-      }
-
-    });
-
-  document
-    .getElementById(id)
-    ?.classList.toggle("on");
-}
-
-
-function toggleSwitch(
-  element
-) {
-
-  if (!element) return;
-
-  const on =
-    element.dataset.on === "1";
-
-  element.dataset.on =
-    on ? "0" : "1";
-
-  const knob =
-    element.firstElementChild;
-
-  element.style.background =
-    on
-      ? "#ddd"
-      : "#212121";
-
-  if (knob) {
-
-    knob.style.left =
-      on
-        ? "3px"
-        : "23px";
-  }
-
-  toast(
-    on
-      ? "Auto-report off"
-      : "Auto-report scheduled"
-  );
-}
-
-
-/* =========================================================
-   GLOBAL FUNCTIONS
-   =========================================================
-
-   IMPORTANT:
-   Your index.html uses inline onclick:
-   
-   onclick="signUp()"
-   onclick="doSignIn()"
-   onclick="signInWithGoogle()"
-   onclick="signInWithApple()"
-   
-   Therefore ALL of these MUST be attached to window.
-   ========================================================= */
-
-
-/* AUTH */
-
-window.signIn =
-  signIn;
-
-window.signUp =
-  signUp;
-
-window.signInWithGoogle =
-  signInWithGoogle;
-
-window.signInWithApple =
-  signInWithApple;
-
-window.signOut =
-  signOut;
-
-window.logout =
-  signOut;
-
-window.doSignIn =
-  signIn;
-
-
-/* APP */
-
-window.showApp =
-  showApp;
-
-window.pickRole =
-  pickRole;
-
-window.show =
-  show;
-
-window.openDrawer =
-  openDrawer;
-
-window.closeDrawer =
-  closeDrawer;
-
-window.toast =
-  toast;
-
-window.pickChip =
-  pickChip;
-
-
-/* SOS */
-
-window.openSOS =
-  openSOS;
-
-window.closeSOS =
-  closeSOS;
-
-window.resetSOS =
-  resetSOS;
-
-window.startHold =
-  startHold;
-
-window.endHold =
-  endHold;
-
-window.fireSOS =
-  fireSOS;
-
-
-/* CHAT */
-
-window.addMsg =
-  addMsg;
-
-window.sendChat =
-  sendChat;
-
-window.quickAsk =
-  quickAsk;
-
-window.openThread =
-  openThread;
-
-window.sendThread =
-  sendThread;
-
-
-/* OTHER UI */
-
-window.toggleHeart =
-  toggleHeart;
-
-window.toggleFaq =
-  toggleFaq;
-
-window.toggleAbout =
-  toggleAbout;
-
-
-/* ADMIN */
-
-window.adminGo =
-  adminGo;
-
-window.openSidebar =
-  openSidebar;
-
-window.closeSidebar =
-  closeSidebar;
-
-window.toggleStepper =
-  toggleStepper;
-
-window.toggleSwitch =
-  toggleSwitch;
-
-
-/* =========================================================
-   YK API OBJECTS
-   ========================================================= */
-
-window.YKAuth = {
-
-  signIn,
-
-  signUp,
-
-  signOut,
-
-  signInWithGoogle,
-
-  signInWithApple
-
-};
-
-
-window.YKApp = {
-
-  sendChat:
-    chat,
-
-  openThread,
-
-  sendThread
-
-};
-
-
-/* =========================================================
-   START APPLICATION
-   ========================================================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  async () => {
-
-    /*
-     * SOS button listeners
-     */
-
-    const sosCircle =
-      document.getElementById(
-        "sosCircle"
-      );
-
-    if (sosCircle) {
-
-      sosCircle.addEventListener(
-        "mousedown",
-        startHold
-      );
-
-      sosCircle.addEventListener(
-        "mouseup",
-        endHold
-      );
-
-      sosCircle.addEventListener(
-        "mouseleave",
-        endHold
-      );
-
-      sosCircle.addEventListener(
-        "touchstart",
-        event => {
-
-          event.preventDefault();
-
-          startHold();
-
-        },
-        {
-          passive: false
-        }
-      );
-
-      sosCircle.addEventListener(
-        "touchend",
-        event => {
-
-          event.preventDefault();
-
-          endHold();
-
-        },
-        {
-          passive: false
-        }
-      );
-
+(function () {
+  let session = null;
+  let tempSetupDID = null; // Stores DID temporarily during setup
+
+  async function init() {
+    // Pre-populate dummy user for test
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const defaultUsers = {
+      'DID1234': { digitalId: 'DID1234', full_name: 'Madhav Gairola', phone: '+91 7895936487', nationality: '🇮🇳 India (Delhi)', role: 'tourist', dob: '15 Aug 1998', blood: 'B+', lang: 'EN · HI', visa: 'Tourist (e-Visa)', validTill: '12 Dec 2026', entry: '18 Aug 2026', city: 'Delhi', stay: 'Taj Palace', ins: 'Active ✓' },
+      'DID0807': { digitalId: 'DID0807', full_name: 'Renesha Sagar', phone: '+34 600123456', nationality: '🇪🇸 Spain', role: 'tourist', dob: '08 Jul 1999', blood: 'O-', lang: 'ES · EN', visa: 'Visa on Arrival', validTill: '01 Nov 2026', entry: '01 Sep 2026', city: 'Goa', stay: 'Taj Exotica', ins: 'Active ✓' },
+      'DID6767': { digitalId: 'DID6767', full_name: 'Anupam Anand', phone: '+234 8012345678', nationality: '🇳🇬 Nigeria', role: 'tourist', dob: '22 Jan 1995', blood: 'A+', lang: 'EN · YR', visa: 'Tourist (Regular)', validTill: '15 Jan 2027', entry: '15 Oct 2026', city: 'Mumbai', stay: 'Oberoi', ins: 'Active ✓' },
+      'DID9999': { digitalId: 'DID9999', full_name: 'Sarah Chen', phone: '+65 91234567', nationality: '🇸🇬 Singapore', role: 'tourist', dob: '30 May 1990', blood: 'AB+', lang: 'EN · ZH', visa: 'Business', validTill: '05 May 2028', entry: '05 May 2026', city: 'Bangalore', stay: 'Leela Palace', ins: 'Active ✓' },
+      'DID1111': { digitalId: 'DID1111', full_name: 'Admin Test', phone: '+1 555000000', nationality: '🇺🇸 USA', role: 'admin' }
+    };
+    let updated = false;
+    for (const [did, data] of Object.entries(defaultUsers)) {
+      if (!users[did]) { users[did] = data; updated = true; }
     }
+    if (updated) localStorage.setItem('users', JSON.stringify(users));
 
-
-    /*
-     * Initialize Supabase.
-     */
-
-    await init();
-
+    const s = localStorage.getItem('session'); 
+    if (s) { session = JSON.parse(s); await loadUser(); } 
   }
-);
+  
+  function txt(id, v) { const e = document.getElementById(id); if (e) e.textContent = v ?? '—'; }
+  function initials(n) { return (n||'').split(/\s+/).map(x => x[0]).join('').slice(0, 2).toUpperCase() || '?'; }
+  
+  async function loadUser() {
+    try {
+      const n = session.full_name || session.digitalId;
+      txt('greeting', 'Hello ' + n + '!'); txt('profileName', n); txt('drawerName', n);
+      txt('homeAvatar', initials(n)); txt('drawerAvatar', initials(n)); txt('profileFullName', n);
+      txt('profileNationality', session.nationality || 'Not added');
+      
+      // Additional user info
+      if (document.getElementById('profilePhone')) txt('profilePhone', session.phone || 'Not added');
+      if (document.getElementById('profileDigitalId')) txt('profileDigitalId', session.digitalId);
+      if (document.getElementById('profileDetailName')) txt('profileDetailName', n);
+      
+      // Extended info
+      txt('profileDob', session.dob || '—');
+      txt('profileBlood', session.blood || '—');
+      txt('profileLang', session.lang || '—');
+      txt('profileVisa', session.visa || '—');
+      txt('profileValidTill', session.validTill || '—');
+      txt('profileEntryDate', session.entry || '—');
+      txt('profileCity', session.city || '—');
+      txt('profileStay', session.stay || '—');
+      txt('profileInsurance', session.ins || '—');
+      
+      const role = session.role || 'tourist';
+      if (role === 'admin') { showApp('admin-app'); adminGo('a-dashboard'); }
+      else { showApp('tourist-app'); show('home'); }
+    } catch (e) { console.error(e); }
+  }
+
+  async function signIn() {
+    const did = document.getElementById('li-digitalid')?.value.trim();
+    const password = document.getElementById('li-password')?.value || '';
+    if (!did || !password) return toast('Enter your Digital ID and password');
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    if (!users[did] || users[did].password !== password) return toast('Invalid credentials');
+    session = users[did];
+    localStorage.setItem('session', JSON.stringify(session));
+    toast('Signed in successfully');
+    await loadUser();
+  }
+
+  // FIRST TIME SETUP LOGIC
+  window.setupSendOTP = function() {
+    const did = document.getElementById('su-digitalid')?.value.trim();
+    if (!did) return toast('Please enter a Digital ID');
+    
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    if (!users[did]) return toast('Digital ID not found in system. Admin must add you first.');
+    if (users[did].password) return toast('Account already setup. Please sign in.');
+    
+    tempSetupDID = did;
+    document.getElementById('setup-step-1').style.display = 'none';
+    document.getElementById('setup-step-2').style.display = 'block';
+    
+    // Mask phone number
+    const p = users[did].phone || '';
+    const masked = p.slice(0, 3) + '****' + p.slice(-4);
+    toast(`OTP sent to ${masked}`);
+  }
+
+  window.setupVerifyOTP = function() {
+    const otp = document.getElementById('su-otp')?.value.trim();
+    if (otp !== '1234') return toast('Invalid OTP. Please enter 1234');
+    
+    document.getElementById('setup-step-2').style.display = 'none';
+    document.getElementById('setup-step-3').style.display = 'block';
+    toast('OTP Verified');
+  }
+
+  window.setupComplete = async function() {
+    const pass1 = document.getElementById('su-pass1')?.value || '';
+    const pass2 = document.getElementById('su-pass2')?.value || '';
+    
+    if (pass1.length < 6) return toast('Password must be at least 6 characters');
+    if (pass1 !== pass2) return toast('Passwords do not match');
+    
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    users[tempSetupDID].password = pass1;
+    localStorage.setItem('users', JSON.stringify(users));
+    
+    session = users[tempSetupDID];
+    localStorage.setItem('session', JSON.stringify(session));
+    
+    // Reset forms
+    document.getElementById('setup-step-1').style.display = 'block';
+    document.getElementById('setup-step-3').style.display = 'none';
+    
+    toast('Setup complete! Signing in...');
+    await loadUser();
+  }
+
+  async function signOut() {
+    session = null;
+    tempSetupDID = null;
+    localStorage.removeItem('session');
+    
+    // Reset forms
+    document.getElementById('setup-step-1').style.display = 'block';
+    document.getElementById('setup-step-2').style.display = 'none';
+    document.getElementById('setup-step-3').style.display = 'none';
+    document.getElementById('su-digitalid').value = '';
+    document.getElementById('su-otp').value = '';
+    document.getElementById('su-pass1').value = '';
+    document.getElementById('su-pass2').value = '';
+    
+    showApp('login-app');
+    document.getElementById('loginform')?.classList.add('on');
+    document.getElementById('signupform')?.classList.remove('on');
+  }
+
+  async function chat() {
+    const i = document.getElementById('chatInput'), v = i?.value.trim(); if (!v) return;
+    addMsg('chatScroll', v, 'user'); i.value = '';
+    setTimeout(() => addMsg('chatScroll', 'Offline prototype: I received your message.', 'bot'), 500);
+  }
+
+  async function sosReal() {
+    toast('Offline: Mock SOS fired');
+    sosFired = true; txt('sosLabel', 'ALERT SENT'); txt('sosTitle', 'HELP IS ON THE WAY'); txt('sosSub', 'Your SOS has been recorded securely.');
+    ['n-police', 'n-helpline', 'n-sarah'].forEach((id, i) => setTimeout(() => document.getElementById(id)?.classList.add('done'), 500 + i * 700));
+  }
+
+  window.YKAuth = { signIn, signOut }; window.YKApp = { sendChat: chat }; window.fireSOS = sosReal;
+  
+  window.openThread = async function () { showApp('tourist-app'); show('thread'); const b = document.getElementById('threadScroll'); if (b) b.innerHTML = ''; addMsg('threadScroll', 'Offline thread view', 'bot'); };
+  window.sendThread = async function () { const i = document.getElementById('threadInput'), v = i?.value.trim(); if (!v) return; addMsg('threadScroll', v, 'user'); i.value = ''; setTimeout(() => addMsg('threadScroll', 'Offline reply', 'bot'), 500); };
+  
+  document.addEventListener('DOMContentLoaded', () => { init(); });
+})();

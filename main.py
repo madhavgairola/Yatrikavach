@@ -161,7 +161,12 @@ async def user_from_request(request: Request):
 @app.get("/")
 async def index():
     return FileResponse(
-        BASE / "static" / "index.html"
+        BASE / "static" / "index.html",
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0"
+        }
     )
 
 
