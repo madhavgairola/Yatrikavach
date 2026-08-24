@@ -199,7 +199,7 @@ function toggleSwitch(el) {
     try {
       const n = session.full_name || session.digitalId;
       txt('greeting', 'Hello ' + n + '!'); txt('profileName', n); txt('drawerName', n);
-      txt('homeAvatar', initials(n)); txt('drawerAvatar', initials(n)); txt('profileFullName', n);
+      txt('homeAvatar', initials(n)); txt('drawerAvatar', initials(n)); txt('profileAvatar', initials(n)); txt('profileFullName', n);
       txt('profileNationality', session.nationality || 'Not added');
       
       // Additional user info
