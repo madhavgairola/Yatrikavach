@@ -309,7 +309,27 @@ function toggleSwitch(el) {
   async function chat() {
     const i = document.getElementById('chatInput'), v = i?.value.trim(); if (!v) return;
     addMsg('chatScroll', v, 'user'); i.value = '';
-    setTimeout(() => addMsg('chatScroll', 'Offline prototype: I received your message.', 'bot'), 500);
+    
+    if (!navigator.onLine) {
+      setTimeout(() => addMsg('chatScroll', 'Offline prototype: I received your message. If this is an emergency, press the SOS button immediately.', 'bot'), 500);
+      return;
+    }
+    
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: v })
+      });
+      const data = await res.json();
+      if (data.answer) {
+        addMsg('chatScroll', data.answer, 'bot');
+      } else {
+        addMsg('chatScroll', 'Sorry, something went wrong on the server.', 'bot');
+      }
+    } catch(err) {
+      addMsg('chatScroll', 'Network error. Please try again or use SOS.', 'bot');
+    }
   }
 
   async function sosReal() {

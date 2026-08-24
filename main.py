@@ -828,34 +828,35 @@ async def chat(
     request: Request
 ):
 
-    # Check logged-in user
-    user, token = await user_from_request(
-        request
-    )
-
-    client_db = db_for_user(
-        token
-    )
-
-    # User location/context
-    context = {
-        "place_name": body.place_name,
-        "latitude": body.latitude,
-        "longitude": body.longitude
-    }
-
-    # Save user message
-    (
-        client_db
-        .table("chat_messages")
-        .insert({
-            "user_id": user.id,
-            "role": "user",
-            "message": body.message,
-            "context": context
-        })
-        .execute()
-    )
+    # Try to check logged-in user
+    try:
+        user, token = await user_from_request(request)
+        client_db = db_for_user(token)
+        
+        # User location/context
+        context = {
+            "place_name": body.place_name,
+            "latitude": body.latitude,
+            "longitude": body.longitude
+        }
+    
+        # Save user message
+        (
+            client_db
+            .table("chat_messages")
+            .insert({
+                "user_id": user.id,
+                "role": "user",
+                "message": body.message,
+                "context": context
+            })
+            .execute()
+        )
+    except HTTPException:
+        # Proceed anonymously for prototype testing
+        user = None
+        client_db = None
+        context = {}
 
     answer = None
 
@@ -964,17 +965,18 @@ User question:
     # SAVE AI RESPONSE
     # -----------------------------------------------------
 
-    (
-        client_db
-        .table("chat_messages")
-        .insert({
-            "user_id": user.id,
-            "role": "assistant",
-            "message": answer,
-            "context": context
-        })
-        .execute()
-    )
+    if client_db and user:
+        (
+            client_db
+            .table("chat_messages")
+            .insert({
+                "user_id": user.id,
+                "role": "assistant",
+                "message": answer,
+                "context": context
+            })
+            .execute()
+        )
 
     return {
         "answer": answer
